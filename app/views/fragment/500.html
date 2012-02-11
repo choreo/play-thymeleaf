@@ -1,0 +1,135 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-2.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>500 error</title>
+<meta charset="utf-8" />
+<style type="text/css" th:fragment="style" th:if="${@play.Play@mode.name() == 'DEV'}">
+    html, body {
+        margin: 0;
+        padding: 0;
+        font-family: Helvetica, Arial, Sans;
+        background: #EEEEEE;
+    }            
+    .block {
+        padding: 20px;
+        border-bottom: 1px solid #aaa;
+    }
+    #header h1 {
+        font-weight: normal;
+        font-size: 28px;
+        margin: 0;
+    }
+    #more {
+        color: #666;
+        font-size: 80%;
+        border: none;
+    }
+    #header {
+        background: #fcd2da;
+    }
+    #header p {
+        color: #333;
+    }
+    #source {
+        background: #f6f6f6;
+    }
+    #source h2 {
+        font-weight: normal;
+        font-size: 18px;
+        margin: 0 0 10px 0;
+    }
+    #source .lineNumber {
+        float: left;
+        display: block;
+        width: 40px;
+        text-align: right;
+        margin-right: 10px;
+        font-size: 14px;
+        font-family: monospace;
+        background: #333;
+        color: #fff;
+    }
+    #source .line {
+        clear: both;
+        color: #333;
+        margin-bottom: 1px;
+    }
+    #source pre {
+        font-size: 14px;
+        margin: 0;
+        overflow-x: hidden;
+    }
+    #source .error {
+        color: #c00 !important;
+    }
+    #source .error .lineNumber {
+        background: #c00;
+    }
+    #source a {
+        text-decoration: none;
+    }
+    #source a:hover * {
+        cursor: pointer !important;
+    }
+    #source a:hover pre {
+        background: #FAFFCF !important;
+    }
+	#source em {
+		font-style: normal;
+		text-decoration: underline;
+		font-weight: bold;
+	}
+	#source strong {
+		font-style: normal;
+		font-weight: bold;
+	}
+</style>
+</head>
+<body th:fragment="error" th:remove="tag">
+<div th:if="${exception instanceof play.exceptions.PlayException}" th:remove="tag">
+    <div id="header" class="block" th:inline="text">
+        <h1>
+            [[${exception.errorTitle}]] 
+        </h1>
+        <p th:if="${@play.Play@mode.name() == 'DEV'}" th:utext="${exception.errorDescription}">
+            description
+        </p>
+        <p th:if="${@play.Play@mode.name() == 'PROD'}">
+            Error details are not displayed when Play! is in PROD mode. Check server logs for detail.
+        </p>
+    </div>
+    <div th:with="from = ${exception.lineNumber - 5 &gt;= 0 &amp;&amp; exception.lineNumber &lt;= exception.source.size() ? exception.lineNumber - 5 : 0}, to = ${exception.lineNumber + 5  &lt; exception.source.size() ? exception.lineNumber + 5 : exception.source.size()-1}" th:inline="text" id="source" class="block" th:if="${exception.sourceAvailable &amp;&amp; exception.lineNumber &amp;&amp; @play.Play@mode.name() == 'DEV'}" >
+        <h2>In [[${exception.sourceFile}]] (around line [[${exception.lineNumber}]])</h2>
+        <div th:each="line, iterStat : ${exception.source.subList(from, to)}" th:remove="tag">
+        <div th:with="opened = ${@play.utils.Utils@open(exception.sourceFile, iterStat.count+from)}" th:remove="tag">
+        <a href="#" th:if="${!#strings.isEmpty(opened)}" th:href="${opened}">
+          <div class="line" th:attrappend="class=${exception.lineNumber == iterStat.count+from ? ' error':''}">
+              <span class="lineNumber">[[${iterStat.count+from}]]:</span>
+              <pre th:utext="${'&nbsp;' + @org.apache.commons.lang.StringEscapeUtils@escapeHtml(line).replace('&amp;darr;', '&lt;strong&gt;&amp;darr;&lt;/strong&gt;').replace('\000'+'', '&lt;em&gt;').replace('\001'+'', '&lt;/em&gt;')}">line</pre>
+          </div>
+        </a>
+        <div th:remove="tag" th:if="${#strings.isEmpty(opened)}">
+          <div class="line" th:attrappend="class=${exception.lineNumber == iterStat.count+from ? ' error':''}">
+              <span class="lineNumber">[[${iterStat.count+from}]]:</span>
+              <pre th:utext="${'&nbsp;' + @org.apache.commons.lang.StringEscapeUtils@escapeHtml(line).replace('&amp;darr;', '&lt;strong&gt;&amp;darr;&lt;/strong&gt;').replace('\000'+'', '&lt;em&gt;').replace('\001'+'', '&lt;/em&gt;')}">line</pre>
+          </div>
+        </div>
+        </div>
+        </div>
+    </div>
+</div>
+<div th:if="${exception.moreHTML}" th:remove="tag">
+	<div id="specific" class="block" th:utext="${exception.moreHTML}">
+		more html
+	</div>
+</div>
+<div id="more" class="block">
+    This exception has been logged with id <strong th:text="${exception.id}">12343245234</strong>
+</div>
+<div th:unless="${exception instanceof play.exceptions.PlayException}" th:remove="tag">
+    <div id="header" class="block">
+        <h1>${exception?.message}</h1>
+    </div>
+</div>
+</body>
+</html>

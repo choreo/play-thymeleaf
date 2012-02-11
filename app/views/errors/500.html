@@ -1,0 +1,19 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-2.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Application error</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css" th:substituteby="${'{module:' + @play.Play@modules.get('thymeleaf').name + '}/app/views/fragment/500.html'} :: style"></style>
+</head>
+<body>
+	<div th:if="${@play.Play@mode.name() == 'DEV'}" th:remove="tag">
+		<div style="display: none;" th:substituteby="${'{module:' + @play.Play@modules.get('thymeleaf').name + '}/app/views/fragment/500.html'} :: error">ERROR</div>
+	</div>
+	<div th:if="${@play.Play@mode.name() == 'PROD'}" th:remove="tag">
+		<h1>Oops, an error occured</h1>
+		<p th:if="${exception instanceof play.exceptions.PlayException}">
+			This exception has been logged with id <strong th:inline="text">[[${exception.id}]]</strong>.
+		</p>
+	</div>
+</body>
+</html>
