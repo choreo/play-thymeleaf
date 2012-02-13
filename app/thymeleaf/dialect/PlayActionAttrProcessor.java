@@ -37,7 +37,7 @@ import play.vfs.VirtualFile;
 /**
  * TODO DOCUMENT ME
  */
-
+@Deprecated
 public class PlayActionAttrProcessor extends AbstractAttributeModifierAttrProcessor {
     private static final Pattern PARAM_PATTERN = Pattern.compile("^\\s*.*?\\((.+)\\)\\s*$");
 

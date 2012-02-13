@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
  
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:pl="http://www.playframework.org/">
     <head th:fragment="head">
         <title th:text="${title}">title</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -17,18 +17,18 @@
             </div>
             <ul id="tools">
                 <li>
-                    <a href="@{Admin.index()}">Log in to write something</a>
+                    <a href="admin/index.html.tl.html" pl:href="Admin.index">Log in to write something</a>
                 </li>
             </ul>
             <div id="title">
                 <span class="about">About this blog</span>
-                <h1><a href="@{Application.index()}" th:text="${blogTitle}">Blog Title</a></h1>
+                <h1><a href="Application/index.html.tl.html" pl:href="Application.index" th:text="${blogTitle}">Blog Title</a></h1>
                 <h2 th:text="${blogBaseline}">Baseline</h2>
             </div>
         </div>
 
         <div id="main">
-            Main content
+            This is a main template fragment file. 'head', 'header' and 'footer' are available.
         </div>
 
         <p id="footer" th:fragment="footer">

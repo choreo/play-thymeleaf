@@ -1,0 +1,8 @@
+you have to remove default /error/404.html and /error/500.html,
+because all the errors are routed to thymeleaf template.
+
+
+the string inside () is parsed as an OGNL expression.
+
+Application.index({'green', 'red', 'blue'}) => list
+Application.index(#{'param1' : 'value1', 'param2' : 'value2', 'param3' : 'value3'}) => map

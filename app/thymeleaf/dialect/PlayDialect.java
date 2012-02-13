@@ -30,7 +30,7 @@ public class PlayDialect extends AbstractDialect {
     @Override
     public Set<IAttrProcessor> getAttrProcessors() {
         final Set<IAttrProcessor> attrProcessors = new HashSet<IAttrProcessor>();
-        attrProcessors.add(new PlayActionAttrProcessor());
+        attrProcessors.add(new PlayActionAttributeModifierAttrProcessor());
         return attrProcessors;
     }
 }
