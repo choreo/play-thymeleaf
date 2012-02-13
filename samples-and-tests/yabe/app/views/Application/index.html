@@ -1,33 +1,6 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
- 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" xmlns:th="http://www.thymeleaf.org">
-    <head th:include="/app/views/main.html :: head" th:with="title='Home'">
-        <title>title</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <link rel="stylesheet" href="../../../public/stylesheets/main.css" />
-        <link rel="shortcut icon" type="image/png" href="../../../public/images/favicon.png" />
-        <script src="../../../public/javascripts/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../../../public/javascripts/jquery.tools-1.2.5.toolbox.expose.min.js" type="text/javascript" charset="utf-8"></script>
-    </head>
-    <body>
+#{extends 'main.html' /}
+#{set title:'Home' /}
 
-        <div id="header" th:include="/app/views/main.html :: header">
-            <div id="logo">
-                yabe.
-            </div>
-            <ul id="tools">
-                <li>
-                    <a href="../admin/index.html">Log in to write something</a>
-                </li>
-            </ul>
-            <div id="title">
-                <span class="about">About this blog</span>
-                <h1><a href="#">Blog Title</a></h1>
-                <h2>Baseline</h2>
-            </div>
-        </div>
-
-        <div id="main">
 #{if frontPost}
 
     #{display post:frontPost, as:'home' /}
@@ -51,11 +24,3 @@
         There is currently nothing to read here.
     </div>
 #{/else}
-        </div>
-
-        <p id="footer" th:include="/app/views/main.html :: footer">
-        footer
-        </p>
-
-    </body>
-</html>

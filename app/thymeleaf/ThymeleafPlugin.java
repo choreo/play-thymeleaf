@@ -31,7 +31,14 @@ public class ThymeleafPlugin extends PlayPlugin {
         Logger.info("ThymeleafPlugin.onLoad");
 
         PlayTemplateResolver playResolver = new PlayTemplateResolver();
-        playResolver.setPrefix(Play.applicationPath.getAbsolutePath());
+        playResolver.setPrefix(Play.configuration.getProperty("thymeleaf.prefix", Play.applicationPath.getAbsolutePath()));
+
+        if (Play.configuration.containsKey("thymeleaf.suffix")) {
+            playResolver.setSuffix(Play.configuration.getProperty("thymeleaf.suffix"));
+        }
+
+        Logger.info("PlayTemplateResolver prefix = %s, suffix = %s", playResolver.getPrefix(), playResolver.getSuffix());
+
 
         ModuleTemplateResolver moduleResolver = new ModuleTemplateResolver(Play.modules.get("thymeleaf"));
 
@@ -56,7 +63,7 @@ public class ThymeleafPlugin extends PlayPlugin {
             }
             break;
         }
-
+        
         templateEngine = new TemplateEngine();
         templateEngine.addTemplateResolver(playResolver);
         templateEngine.addTemplateResolver(moduleResolver);
