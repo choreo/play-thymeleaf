@@ -5,32 +5,21 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.thymeleaf.Arguments;
-import org.thymeleaf.processor.applicability.AttrApplicability;
+import org.thymeleaf.dom.Element;
 import org.thymeleaf.processor.attr.AbstractSingleAttributeModifierAttrProcessor;
-import org.thymeleaf.processor.attr.AbstractAttributeModifierAttrProcessor.ModificationType;
-import org.thymeleaf.standard.expression.Expression;
 import org.thymeleaf.standard.expression.OgnlExpressionEvaluator;
-import org.thymeleaf.standard.expression.StandardExpressionProcessor;
-import org.thymeleaf.standard.processor.attr.AbstractStandardSingleAttributeModifierAttrProcessor;
-import org.thymeleaf.templateresolver.TemplateResolution;
 import org.thymeleaf.util.PrefixUtils;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import play.Logger;
 import play.exceptions.ActionNotFoundException;
 import play.mvc.ActionInvoker;
 import play.mvc.Router;
 import play.mvc.Http.Request;
-import play.mvc.Router.ActionDefinition;
 import play.utils.Java;
 
 /**
@@ -44,58 +33,67 @@ public class PlayActionAttributeModifierAttrProcessor extends AbstractSingleAttr
     public static final Integer ATTR_PRECEDENCE = Integer.valueOf(1000);
     
     public static final String[] ATTR_NAMES = 
-        new String[] {
-                "action",
-                "href",
-                "name",
-                "src",
-                "type",
-        };
+                    new String[] {
+                            "action",
+                            "href",
+                            "name",
+                            "src",
+                            "type",
+                            "value"
+                    };
 
-    public Set<AttrApplicability> getAttributeApplicabilities() {
-        return AttrApplicability.createSetForAttrNames(ATTR_NAMES);
+    public static final PlayActionAttributeModifierAttrProcessor[] PROCESSORS;
+    
+    static {
+        
+        PROCESSORS = new PlayActionAttributeModifierAttrProcessor[ATTR_NAMES.length];
+        for (int i = 0; i < PROCESSORS.length; i++) {
+            PROCESSORS[i] = new PlayActionAttributeModifierAttrProcessor(ATTR_NAMES[i]);
+        }
+        
     }
 
-    public Integer getPrecedence() {
+    private PlayActionAttributeModifierAttrProcessor(final String attributeName) {
+        super(attributeName);
+    }
+
+    @Override
+    public int getPrecedence() {
         return ATTR_PRECEDENCE;
     }
 
 
     @Override
     protected String getTargetAttributeName(
-            final Arguments arguments, final TemplateResolution templateResolution, final Document document, 
-            final Element element, final Attr attribute, final String attributeName, final String attributeValue) {
+            final Arguments arguments, final Element element, final String attributeName) {
         return PrefixUtils.getUnprefixed(attributeName);
     }
 
     
     @Override
     protected ModificationType getModificationType(
-            final Arguments arguments, final TemplateResolution templateResolution, 
-            final Document document, final Element element, 
-            final Attr attribute, 
-            final String attributeName, final String attributeValue,
-            final String newAttributeName) {
+            final Arguments arguments, final Element element, final String attributeName, final String newAttributeName) {
         return ModificationType.SUBSTITUTION;
     }
-
-
-
+    
     @Override
     protected boolean removeAttributeIfEmpty(
-            final Arguments arguments, final TemplateResolution templateResolution, 
-            final Document document, final Element element, 
-            final Attr attribute, 
-            final String attributeName, final String attributeValue,
-            final String newAttributeName) {
+            final Arguments arguments, final Element element, final String attributeName, final String newAttributeName) {
         return false;
     }
 
     @Override
+    protected boolean recomputeProcessorsAfterExecution(final Arguments arguments,
+            final Element element, final String attributeName) {
+        return false;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
     protected String getTargetAttributeValue(
-            final Arguments arguments, final TemplateResolution templateResolution,
-            final Document document, final Element element, final Attr attribute,
-            final String attributeName, final String attributeValue) {
+            final Arguments arguments, final Element element, final String attributeName) {
+        
+        final String attributeValue = element.getAttributeValue(attributeName);
         
         Matcher matcher = PARAM_PATTERN.matcher(attributeValue);
         if (!matcher.matches()) {
@@ -108,10 +106,10 @@ public class PlayActionAttributeModifierAttrProcessor extends AbstractSingleAttr
             return Router.reverse(attributeValue)
                          .toString();
         }
-
-        Object obj = OgnlExpressionEvaluator.INSTANCE.evaluate(arguments, templateResolution, exp, arguments.getExpressionEvaluationRoot());
+        
+        Object obj = OgnlExpressionEvaluator.INSTANCE.evaluate(arguments, exp, arguments.getExpressionEvaluationRoot());
         if (obj instanceof Map) {
-            return Router.reverse(attributeValue, (Map) obj)
+            return Router.reverse(attributeValue, (Map<String, Object>) obj)
                          .toString();
 
         }

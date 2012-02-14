@@ -3,8 +3,6 @@ package thymeleaf;
 import java.lang.reflect.Method;
 import org.apache.commons.lang.math.NumberUtils;
 import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.TemplateMode;
-
 import play.Logger;
 import play.Play;
 import play.PlayPlugin;
@@ -37,14 +35,11 @@ public class ThymeleafPlugin extends PlayPlugin {
             playResolver.setSuffix(Play.configuration.getProperty("thymeleaf.suffix"));
         }
 
-        Logger.info("PlayTemplateResolver prefix = %s, suffix = %s", playResolver.getPrefix(), playResolver.getSuffix());
-
-
         ModuleTemplateResolver moduleResolver = new ModuleTemplateResolver(Play.modules.get("thymeleaf"));
 
-        TemplateMode mode = TemplateMode.valueOf(Play.configuration.getProperty("thymeleaf.templatemode", "XHTML"));
+        String mode = Play.configuration.getProperty("thymeleaf.templatemode", "XHTML");
         playResolver.setTemplateMode(mode);
-        moduleResolver.setTemplateMode(TemplateMode.XHTML);
+        moduleResolver.setTemplateMode("XHTML");
 
         switch (Play.mode) {
         case DEV:

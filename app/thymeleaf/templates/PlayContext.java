@@ -42,22 +42,6 @@ public class PlayContext extends Context implements IWebContext {
     }
 
     @Override
-    public String getContextPath() {
-        return request.getContextPath();
-    }
-
-    @Override
-    public String getSessionID() {
-        return request.getSession()
-                      .getId();
-    }
-
-    @Override
-    public boolean isSessionIdFromCookie() {
-        return request.isRequestedSessionIdFromCookie();
-    }
-
-    @Override
     public VariablesMap<String, String[]> getRequestParameters() {
         return new VariablesMap<String, String[]>();
     }

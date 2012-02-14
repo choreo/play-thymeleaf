@@ -4,14 +4,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.thymeleaf.Arguments;
+import org.thymeleaf.TemplateProcessingParameters;
 import org.thymeleaf.exceptions.ConfigurationException;
-import org.thymeleaf.resourceresolver.FileResourceResolver;
 import org.thymeleaf.resourceresolver.IResourceResolver;
 import org.thymeleaf.templateresolver.TemplateResolver;
-import org.thymeleaf.util.Validate;
 
-import play.Play;
 import play.vfs.VirtualFile;
 
 /**
@@ -36,12 +33,12 @@ public class ModuleTemplateResolver extends TemplateResolver {
     }
 
     @Override
-    protected String computeResourceName(Arguments arguments) {
+    protected String computeResourceName(final TemplateProcessingParameters templateProcessingParameters) {
 
         checkInitialized();
 
         String computed = unsafeGetPrefix()
-                        + StringUtils.removeStart(arguments.getTemplateName(), "{module:"
+                        + StringUtils.removeStart(templateProcessingParameters.getTemplateName(), "{module:"
                                         + this.moduleName + "}");
         return computed;
     }

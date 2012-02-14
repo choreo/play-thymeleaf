@@ -1,10 +1,11 @@
 package thymeleaf.dialect;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.thymeleaf.dialect.AbstractDialect;
-import org.thymeleaf.processor.attr.IAttrProcessor;
+import org.thymeleaf.processor.IProcessor;
 
 /**
  * TODO DOCUMENT ME
@@ -28,9 +29,9 @@ public class PlayDialect extends AbstractDialect {
     }
 
     @Override
-    public Set<IAttrProcessor> getAttrProcessors() {
-        final Set<IAttrProcessor> attrProcessors = new HashSet<IAttrProcessor>();
-        attrProcessors.add(new PlayActionAttributeModifierAttrProcessor());
+    public Set<IProcessor> getProcessors() {
+        final Set<IProcessor> attrProcessors = new HashSet<IProcessor>();
+        attrProcessors.addAll(Arrays.asList(PlayActionAttributeModifierAttrProcessor.PROCESSORS));
         return attrProcessors;
     }
 }

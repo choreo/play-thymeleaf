@@ -8,6 +8,7 @@ import java.io.InputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.thymeleaf.Arguments;
+import org.thymeleaf.TemplateProcessingParameters;
 import org.thymeleaf.resourceresolver.FileResourceResolver;
 import org.thymeleaf.resourceresolver.IResourceResolver;
 import org.thymeleaf.util.Validate;
@@ -34,9 +35,9 @@ public class PlayFileResourceResolver implements IResourceResolver {
     }
 
     @Override
-    public InputStream getResourceAsStream(final Arguments arguments, final String resourceName) {
+    public InputStream getResourceAsStream(final TemplateProcessingParameters templateProcessingParameters, final String resourceName) {
         logger.debug("finding thymeleaf resource {} templatename = {}", resourceName,
-                        arguments.getTemplateName());
+                        templateProcessingParameters.getTemplateName());
         Validate.notNull(resourceName, "Resource name cannot be null");
         final File resourceFile = new File(resourceName);
         try {

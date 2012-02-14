@@ -4,7 +4,6 @@ import java.util.Map;
 
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import org.thymeleaf.exceptions.OutputCreationException;
 import org.thymeleaf.exceptions.TemplateProcessingException;
 
 import play.Logger;
