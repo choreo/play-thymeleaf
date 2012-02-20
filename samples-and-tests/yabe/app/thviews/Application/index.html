@@ -1,14 +1,14 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
  
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:include="/app/views/main.html :: head" th:with="title='Home'">
+<head th:include="/main.html :: head" th:with="title='Home'">
 <title>title</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" href="../../../public/stylesheets/main.css" />
 </head>
 <body>
 
-	<div id="header" th:include="/app/views/main.html :: header">
+	<div id="header" th:include="/main.html :: header">
 		<div id="logo">yabe.</div>
 		<ul id="tools">
 			<li><a href="../admin/index.html">Log in to write something</a></li>
@@ -24,9 +24,9 @@
 
 	<div id="main">
 
-        <div th:if="${frontPost}" th:remove="tag">
+        <div th:if="${frontPost}" th:remove="tag"><span th:text="${frontPost.comments.size}"></span>
 
-		<div th:include="/app/views/tags/display.html :: showPost" th:with="post=${frontPost}, as='home'">
+		<div th:include="/tags/display.html :: showPost" th:with="post=${frontPost}, as='home'">
     #{display post:frontPost, as:'home' /}
 		</div>
 
@@ -47,7 +47,7 @@
 #{/else}
         </div>
 
-        <p id="footer" th:include="/app/views/main.html :: footer">
+        <p id="footer" th:include="/main.html :: footer">
         footer
         </p>
 

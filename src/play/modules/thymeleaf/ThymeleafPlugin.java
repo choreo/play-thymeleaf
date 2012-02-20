@@ -1,21 +1,24 @@
-package thymeleaf;
+package play.modules.thymeleaf;
 
 import java.lang.reflect.Method;
+
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.thymeleaf.TemplateEngine;
 import play.Logger;
 import play.Play;
 import play.PlayPlugin;
+import play.classloading.ApplicationClasses.ApplicationClass;
+import play.modules.thymeleaf.dialect.PlayDialect;
+import play.modules.thymeleaf.templates.ModuleTemplateResolver;
+import play.modules.thymeleaf.templates.PlayTemplateResolver;
+import play.modules.thymeleaf.templates.ThymeleafTemplate;
 import play.mvc.ActionInvoker;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Http.Request;
 import play.templates.Template;
 import play.vfs.VirtualFile;
-import thymeleaf.dialect.PlayDialect;
-import thymeleaf.templates.ModuleTemplateResolver;
-import thymeleaf.templates.PlayTemplateResolver;
-import thymeleaf.templates.ThymeleafTemplate;
 
 /**
  * TODO DOCUMENT ME
@@ -24,12 +27,16 @@ import thymeleaf.templates.ThymeleafTemplate;
 public class ThymeleafPlugin extends PlayPlugin {
     private TemplateEngine templateEngine;
 
+    private boolean enhancerEnabled;
+    
     @Override
     public void onLoad() {
-        Logger.info("ThymeleafPlugin.onLoad");
-
+        
+        enhancerEnabled = BooleanUtils.toBoolean(Play.configuration.getProperty("thymeleaf.enhancer.enabled", "true"));
+        Logger.debug("thymeleaf plugin enhancer enabled ? :%s", enhancerEnabled);
+        
         PlayTemplateResolver playResolver = new PlayTemplateResolver();
-        playResolver.setPrefix(Play.configuration.getProperty("thymeleaf.prefix", Play.applicationPath.getAbsolutePath()));
+        playResolver.setPrefix(Play.configuration.getProperty("thymeleaf.prefix", Play.applicationPath.getAbsolutePath()) + "/app/thviews");
 
         if (Play.configuration.containsKey("thymeleaf.suffix")) {
             playResolver.setSuffix(Play.configuration.getProperty("thymeleaf.suffix"));
@@ -65,6 +72,11 @@ public class ThymeleafPlugin extends PlayPlugin {
         templateEngine.addDialect(new PlayDialect());
     }
 
+    @Override
+    public void enhance(ApplicationClass applicationClass) throws Exception {
+        if (enhancerEnabled) new FixSyntheticEnhancer().enhanceThisClass(applicationClass);
+    }
+    
     /**
      * @return Returns the templateEngine.
      */
@@ -77,7 +89,7 @@ public class ThymeleafPlugin extends PlayPlugin {
         if (Request.current() == null) {
             // probably precompiling...
             if (isErrorPage(file)) {
-                Template template = new ThymeleafTemplate(templateEngine);
+                Template template = new ThymeleafTemplate(templateEngine, file);
                 template.name = file.relativePath();
                 return template;
             }
@@ -96,8 +108,10 @@ public class ThymeleafPlugin extends PlayPlugin {
             }
         }
 
-        Template template = new ThymeleafTemplate(templateEngine);
-        template.name = file.relativePath();
+        Template template = new ThymeleafTemplate(templateEngine, file);
+        String path = file.relativePath();
+        // replace /app/views with thymeleaf prefix unless it is inside a module
+        template.name = path.startsWith("{") ? path : path.substring(10);
         return template;
     }
 

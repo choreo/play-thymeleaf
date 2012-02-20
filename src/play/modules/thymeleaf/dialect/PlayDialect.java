@@ -1,4 +1,4 @@
-package thymeleaf.dialect;
+package play.modules.thymeleaf.dialect;
 
 import java.util.Arrays;
 import java.util.HashSet;

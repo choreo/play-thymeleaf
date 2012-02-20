@@ -15,8 +15,15 @@
         <a href="../Posts/show.html" pl:href="Application.show(post.id)" th:text="${post.title}">Post Title</a>
     </h2>
     <div class="post-metadata">
-        <span class="post-author" th:text="${post.author}">by ${_post.author.fullname}</span>,
-        <span class="post-date">${_post.postedAt.format('dd MMM yy')}</span>
+        <span class="post-author">by <span th:remove="tag" th:text="${au=post.author, au.fullname}">Me</span></span>,
+        <span class="post-date" th:text="${#dates.format(post.postedAt, 'dd MMM yy')}">14 Aug 12</span>
+        <span class="post-comments" th:if="${as != 'full'}">
+            &nbsp;|&nbsp; <span th:remove="tag" th:text="${p=post.comments,p.size()}">${_post.comments.size() ?: 'no'} comment${_post.comments.size().pluralize()}</span>
+            #{if _post.comments}
+                , latest by ${_post.comments[-1].author}
+            #{/if}
+        </span>
+        
         #{if _as != 'full'}
             <span class="post-comments">
                 &nbsp;|&nbsp; ${_post.comments.size() ?: 'no'} comment${_post.comments.size().pluralize()}

@@ -1,4 +1,4 @@
-package thymeleaf.templates;
+package play.modules.thymeleaf.templates;
 
 import java.io.File;
 import java.io.FileInputStream;

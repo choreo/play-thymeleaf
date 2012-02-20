@@ -1,4 +1,4 @@
-package thymeleaf.templates;
+package play.modules.thymeleaf.templates;
 
 import java.util.Locale;
 import java.util.Map;
@@ -12,7 +12,8 @@ import org.thymeleaf.context.IWebContext;
 import org.thymeleaf.context.VariablesMap;
 import org.thymeleaf.standard.expression.LinkExpression;
 
-import thymeleaf.servlet.MockHttpServletRequest;
+import play.modules.thymeleaf.servlet.MockHttpServletRequest;
+
 
 /**
  * TODO DOCUMENT ME {@link LinkExpression}で使えるように。

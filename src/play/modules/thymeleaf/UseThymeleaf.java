@@ -1,4 +1,4 @@
-package thymeleaf;
+package play.modules.thymeleaf;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

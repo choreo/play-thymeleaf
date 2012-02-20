@@ -5,7 +5,7 @@ import play.mvc.*;
 import play.data.validation.*;
 import play.libs.*;
 import play.cache.*;
-import thymeleaf.UseThymeleaf;
+import play.modules.thymeleaf.UseThymeleaf;
  
 import java.util.*;
 import models.*;

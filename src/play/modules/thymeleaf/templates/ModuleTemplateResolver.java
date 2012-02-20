@@ -1,4 +1,4 @@
-package thymeleaf.templates;
+package play.modules.thymeleaf.templates;
 
 import java.util.HashSet;
 import java.util.Set;

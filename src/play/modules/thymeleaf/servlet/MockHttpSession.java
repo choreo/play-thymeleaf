@@ -1,4 +1,4 @@
-package thymeleaf.servlet;
+package play.modules.thymeleaf.servlet;
 
 import java.util.Enumeration;
 

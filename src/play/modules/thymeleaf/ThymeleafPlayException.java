@@ -1,12 +1,13 @@
-package thymeleaf;
+package play.modules.thymeleaf;
+
+import java.util.Collections;
+import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.thymeleaf.exceptions.TemplateProcessingException;
-
-import play.exceptions.PlayException;
 import play.exceptions.TemplateException;
-import play.templates.Template;
+import play.modules.thymeleaf.templates.ThymeleafTemplate;
 
 /**
  * TODO DOCUMENT ME
@@ -15,7 +16,7 @@ import play.templates.Template;
 public class ThymeleafPlayException extends TemplateException {
     TemplateProcessingException templateEx;
 
-    public ThymeleafPlayException(Template template, TemplateProcessingException e) {
+    public ThymeleafPlayException(ThymeleafTemplate template, TemplateProcessingException e) {
         super(template, e.getLineNumber(), e.getMessage(), e);
         templateEx = e;
     }
@@ -33,5 +34,9 @@ public class ThymeleafPlayException extends TemplateException {
                                                    .getSimpleName(),
                         StringEscapeUtils.escapeHtml(getMessage()));
     }
-
+    
+    @Override
+    public boolean isSourceAvailable() {
+        return false;
+    }
 }

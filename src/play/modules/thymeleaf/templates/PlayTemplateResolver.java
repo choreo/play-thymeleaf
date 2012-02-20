@@ -1,4 +1,4 @@
-package thymeleaf.templates;
+package play.modules.thymeleaf.templates;
 
 import java.util.Set;
 
@@ -18,7 +18,6 @@ public class PlayTemplateResolver extends TemplateResolver {
     public PlayTemplateResolver() {
         super();
         super.setResourceResolver(new PlayFileResourceResolver());
-        setPrefix(Play.applicationPath.getAbsolutePath());
     }
 
     /**
