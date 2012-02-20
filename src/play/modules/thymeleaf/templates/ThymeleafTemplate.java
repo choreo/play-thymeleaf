@@ -12,6 +12,7 @@ import org.thymeleaf.exceptions.TemplateProcessingException;
 import play.Logger;
 import play.i18n.Lang;
 import play.modules.thymeleaf.ThymeleafPlayException;
+import play.templates.JavaExtensions;
 import play.templates.Template;
 import play.vfs.VirtualFile;
 
@@ -20,6 +21,10 @@ import play.vfs.VirtualFile;
  */
 
 public class ThymeleafTemplate extends Template {
+    private static final String EXT_EVALUATION_VARIABLE_NAME = "ext";
+    
+    private static final JavaExtensions EXTENSIONS = new JavaExtensions();
+    
     private TemplateEngine templateEngine;
 
     private VirtualFile file;
@@ -38,6 +43,10 @@ public class ThymeleafTemplate extends Template {
     protected String internalRender(Map<String, Object> args) {
         // the results of Lang.getLocale() and new Locale(Lang.get()) are not the same for the default locale.
         // Groovy template extension uses the latter.
+        if (!args.containsKey(EXT_EVALUATION_VARIABLE_NAME)) {
+            args.put(EXT_EVALUATION_VARIABLE_NAME, EXTENSIONS);
+        }
+        
         Context context = new PlayContext(new Locale(Lang.get()), args);
         try {
             if (Logger.isTraceEnabled()) Logger.trace("args = %s", args);

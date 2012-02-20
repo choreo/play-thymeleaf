@@ -2,7 +2,7 @@
  
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:pl="http://www.playframework.org">
 <head>
-<title>title</title>
+<title>display fragment</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" href="../../../public/stylesheets/main.css" />
 </head>
@@ -10,64 +10,41 @@
 <h2>Display a post in one of these modes: 'full', 'home' or 'teaser'</h2>
 
 <div th:fragment="showPost" th:remove="tag">
-<div class="post" th:classappend="${as == 'teaser' ? 'teaser' : ''}">
+<div class="post" th:classappend="${_as == 'teaser' ? 'teaser' : ''}">
     <h2 class="post-title">
-        <a href="../Posts/show.html" pl:href="Application.show(post.id)" th:text="${post.title}">Post Title</a>
+        <a href="../Posts/show.html" pl:href="Application.show(_post.id)" th:text="${_post.title}">Post Title</a>
     </h2>
     <div class="post-metadata">
-        <span class="post-author">by <span th:remove="tag" th:text="${au=post.author, au.fullname}">Me</span></span>,
-        <span class="post-date" th:text="${#dates.format(post.postedAt, 'dd MMM yy')}">14 Aug 12</span>
-        <span class="post-comments" th:if="${as != 'full'}">
-            &nbsp;|&nbsp; <span th:remove="tag" th:text="${p=post.comments,p.size()}">${_post.comments.size() ?: 'no'} comment${_post.comments.size().pluralize()}</span>
-            #{if _post.comments}
-                , latest by ${_post.comments[-1].author}
-            #{/if}
+        <span class="post-author">by <span th:remove="tag" th:text="${_post.author.fullname}">Me</span></span>,
+        <span class="post-date" th:text="${#dates.format(_post.postedAt, 'dd MMM yy')}">14 Aug 12</span>
+        <span class="post-comments" th:if="${_as != 'full'}">
+            &nbsp;|&nbsp; <span th:remove="tag" th:text="${(_post.comments.size ? _post.comments.size : 'no') + ' comment' + ext.pluralize(_post.comments)}">3 comments</span>
+            <span th:remove="tag" th:if="${_post.comments.size}" th:text="', latest by ' + ${_post.comments[_post.comments.size -1].author}">, latest by Author A</span>
         </span>
-        
-        #{if _as != 'full'}
-            <span class="post-comments">
-                &nbsp;|&nbsp; ${_post.comments.size() ?: 'no'} comment${_post.comments.size().pluralize()}
-                #{if _post.comments}
-                    , latest by ${_post.comments[-1].author}
-                #{/if}
-            </span>
-        #{/if}
-        #{elseif _post.tags}
-            <span class="post-tags">
-                - Tagged 
-                #{list items:_post.tags, as:'tag'}
-                    <a href="@{Application.listTagged(tag.name)}">${tag}</a>${tag_isLast ? '' : ', '}
-                #{/list}
-            </span>
-        #{/elseif}
+        <span class="post-tags" th:if="${_as == 'full' &amp;&amp; _post.tags }">
+        	<span th:remove="tag" th:each="tag,iterStat : ${_post.tags}"><a href="@{Application.listTagged(tag.name)}" th:text="${tag}">Tag</a><span th:remove="tag" th:text="${iterStat.last ? '' : ','}"></span></span>
+        </span>
     </div>
-    #{if _as != 'teaser'}
-        <div class="post-content">
-            <div class="about">Detail: </div>
-            ${_post.content.nl2br()}
-        </div>
-    #{/if}
+    <div class="post-content" th:if="${_as != 'teaser'}">
+        <div class="about">Detail: </div>
+        <span th:remove="tag" th:utext="${ext.nl2br(ext.escape(_post.content))}">Post content comes here.</span>
+    </div>
 </div>
- 
-#{if _as == 'full'}
-    <div class="comments">
-        <h3>${_post.comments.size() ?: 'no'} comment${_post.comments.size().pluralize()}</h3>
-        
-        #{list items:_post.comments, as:'comment'}
-            <div class="comment">
-                <div class="comment-metadata">
-                    <span class="comment-author">by ${comment.author},</span>
-                    <span class="comment-date">${comment.postedAt.format('dd MMM yy')}</span>
-                </div>
-                <div class="comment-content">
-                    <div class="about">Detail: </div>
-                    ${comment.content.escape().nl2br()}
-                </div>
-            </div>
-        #{/list}
-        
+
+<div class="comments" th:if="${_as == 'full'}">
+    <h3 th:text="${(_post.comments.size ? _post.comments.size : 'no') + ' comment' + ext.pluralize(_post.comments)}">3 comments</h3>
+    
+    <div class="comment" th:each="comment : ${_post.comments}">
+        <div class="comment-metadata">
+            <span class="comment-author" th:text="'by ' + ${comment.author + ','}">by Foo,</span>
+            <span class="comment-date" th:text="${#dates.format(comment.postedAt, 'dd MMM yy')}">14 Jun 09</span>
+        </div>
+        <div class="comment-content">
+            <div class="about">Detail: </div>
+            <span th:tag="remove" th:text="${ext.nl2br(ext.escape(comment.content))}">Some comment.</span>
+        </div>
     </div>
-#{/if}
+</div>
 </div>
 </body>
 </html>

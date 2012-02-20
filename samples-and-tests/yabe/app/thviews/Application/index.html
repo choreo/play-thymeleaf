@@ -2,7 +2,7 @@
  
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:include="/main.html :: head" th:with="title='Home'">
-<title>title</title>
+<title>index</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" href="../../../public/stylesheets/main.css" />
 </head>
@@ -24,32 +24,29 @@
 
 	<div id="main">
 
-        <div th:if="${frontPost}" th:remove="tag"><span th:text="${frontPost.comments.size}"></span>
+        <div th:if="${frontPost}" th:remove="tag">
 
-		<div th:include="/tags/display.html :: showPost" th:with="post=${frontPost}, as='home'">
-    #{display post:frontPost, as:'home' /}
+		<div th:include="/tags/display.html :: showPost" th:with="_post=${frontPost}, _as='home'">
+			latest post here.
 		</div>
 
         <div class="older-posts" th:if="${!olderPosts.empty}">
             <h3>Older posts <span class="from">from this blog</span></h3>
-
-            #{list items:olderPosts, as:'oldPost'}
-                #{display post:oldPost, as:'teaser' /}
-            #{/list}
+			<span th:remove="tag" th:each="oldPost : ${olderPosts}" th:with="_post=${oldPost}, _as='teaser'">
+				<span th:substituteBy="/tags/display.html :: showPost"></span>
+			</span>
         </div>
 
         </div>
 
-#{else}
-    <div class="empty">
-        There is currently nothing to read here.
+	    <div class="empty" th:unless="${frontPost}">
+	        There is currently nothing to read here.
+	    </div>
     </div>
-#{/else}
-        </div>
 
-        <p id="footer" th:include="/main.html :: footer">
-        footer
-        </p>
+    <p id="footer" th:include="/main.html :: footer">
+    footer
+    </p>
 
     </body>
 </html>
