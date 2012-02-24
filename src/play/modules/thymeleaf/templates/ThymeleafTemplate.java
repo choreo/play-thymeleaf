@@ -1,17 +1,16 @@
 package play.modules.thymeleaf.templates;
 
-import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.commons.io.IOUtils;
 import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.TemplateProcessingParameters;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.exceptions.TemplateProcessingException;
 import play.Logger;
 import play.i18n.Lang;
 import play.modules.thymeleaf.ThymeleafPlayException;
+import play.modules.thymeleaf.adapter.FlashAdapter;
+import play.modules.thymeleaf.adapter.ParamsAdapter;
 import play.templates.JavaExtensions;
 import play.templates.Template;
 import play.vfs.VirtualFile;
@@ -46,6 +45,9 @@ public class ThymeleafTemplate extends Template {
         if (!args.containsKey(EXT_EVALUATION_VARIABLE_NAME)) {
             args.put(EXT_EVALUATION_VARIABLE_NAME, EXTENSIONS);
         }
+        
+        args.put("flash", new FlashAdapter());
+        args.put("params", new ParamsAdapter());
         
         Context context = new PlayContext(new Locale(Lang.get()), args);
         try {

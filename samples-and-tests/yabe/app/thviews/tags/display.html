@@ -22,7 +22,8 @@
             <span th:remove="tag" th:if="${_post.comments.size}" th:text="', latest by ' + ${_post.comments[_post.comments.size -1].author}">, latest by Author A</span>
         </span>
         <span class="post-tags" th:if="${_as == 'full' &amp;&amp; _post.tags }">
-        	<span th:remove="tag" th:each="tag,iterStat : ${_post.tags}"><a href="@{Application.listTagged(tag.name)}" th:text="${tag}">Tag</a><span th:remove="tag" th:text="${iterStat.last ? '' : ','}"></span></span>
+                - Tagged 
+        	<span th:remove="tag" th:each="tag,iterStat : ${_post.tags}"><a href="../Application/listTagged.html" pl:href="Application.listTagged(tag.name)" th:text="${tag}">Tag</a><span th:remove="tag" th:text="${iterStat.last ? '' : ', '}"></span></span>
         </span>
     </div>
     <div class="post-content" th:if="${_as != 'teaser'}">
@@ -41,7 +42,7 @@
         </div>
         <div class="comment-content">
             <div class="about">Detail: </div>
-            <span th:tag="remove" th:text="${ext.nl2br(ext.escape(comment.content))}">Some comment.</span>
+            <span th:remove="tag" th:utext="${ext.nl2br(ext.escape(comment.content))}">Some comment.</span>
         </div>
     </div>
 </div>

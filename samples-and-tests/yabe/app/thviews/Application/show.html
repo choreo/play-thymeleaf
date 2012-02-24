@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+ 
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:pl="http://www.playframework.org/" >
+<head th:include="/main.html :: head" th:with="title=${post.title}">
+<title>show post</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="../../../public/stylesheets/main.css" />
+<script src="../../../public/javascripts/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../public/javascripts/jquery.tools-1.2.5.toolbox.expose.min.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+
+	<div id="header" th:include="/main.html :: header">
+		<div id="logo">yabe.</div>
+		<ul id="tools">
+			<li><a href="../admin/index.html">Log in to write something</a></li>
+		</ul>
+		<div id="title">
+			<span class="about">About this blog</span>
+			<h1>
+				<a href="./index.html">Blog Title</a>
+			</h1>
+			<h2>Baseline</h2>
+		</div>
+	</div>
+
+	<div id="main">
+
+	<ul id="pagination">
+        <li id="previous" th:if="${post.previous()}">
+            <a href="#" pl:href="Application.show(post.previous().id)" th:text="${post.previous().title}">previous post title</a>
+        </li>
+        <li id="next"  th:if="${post.next()}">
+            <a href="#" pl:href="Application.show(post.next().id)" th:text="${post.next().title}">next post title</a>
+        </li>
+	</ul>
+
+    <p class="success" th:if="${flash.success}" th:text="${flash.success}">success message</p>
+ 
+	<div th:remove="tag" th:include="/tags/display.html :: showPost" th:with="_post=${post}, _as='full'">
+		post here.
+	</div>
+
+	<h3>Post a comment</h3>
+	<form action="#" pl:form="Application.postComment(post.id)" method="post" >
+	    <p class="error" th:unless="${errors.empty}" th:text="${errors[0]}">
+	        post comment error
+	    </p>
+	    <p>
+	        <label for="author">Your name: </label>
+	        <input type="text" name="author" id="author" value="" th:value="${params.author}" />
+	    </p>
+	    <p>
+	        <label for="content">Your message: </label>
+	        <textarea name="content" id="content" th:text="${params.content}"></textarea>
+	    </p>
+	    <p>
+	        <label for="code">Please type the code below: </label>
+	        <img src="../../../public/images/captcha_sample.png" pl:src="Application.captcha(randomID)" />
+	        <br />
+	        <input type="text" name="code" id="code" size="18" value="" />
+	        <input type="hidden" name="randomID" value="" th:value="${randomID}" />
+	    </p>
+	    <p>
+	        <input type="submit" value="Submit your comment" />
+	    </p>
+	</form>
+
+    </div>
+
+    <p id="footer" th:include="/main.html :: footer">
+    footer
+    </p>
+
+	<script type="text/javascript" charset="utf-8">
+	    $(function() {         
+	        // Expose the form 
+	        $('form').click(function() { 
+	            $('form').expose({api: true}).load(); 
+	        }); 
+	        
+	        // If there is an error, focus to form
+	        if($('form .error').size()) {
+	            $('form').expose({api: true, loadSpeed: 0}).load(); 
+	            $('form input[type=text]').get(0).focus();
+	        }
+	    });
+	</script>
+    </body>
+</html>
+

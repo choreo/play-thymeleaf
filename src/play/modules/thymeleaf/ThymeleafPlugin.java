@@ -29,23 +29,41 @@ public class ThymeleafPlugin extends PlayPlugin {
 
     private boolean enhancerEnabled;
     
+    private String prefix;
+    
+    private String suffix;
+    
+    private String mode;
+    
+    private String ttlString;
+
     @Override
     public void onLoad() {
-        
-        enhancerEnabled = BooleanUtils.toBoolean(Play.configuration.getProperty("thymeleaf.enhancer.enabled", "true"));
+        this.enhancerEnabled = BooleanUtils.toBoolean(Play.configuration.getProperty("thymeleaf.enhancer.enabled", "true"));
         Logger.debug("thymeleaf plugin enhancer enabled ? :%s", enhancerEnabled);
+    }
+    
+    @Override
+    public void onConfigurationRead() {
+        this.prefix = Play.configuration.getProperty("thymeleaf.prefix", Play.applicationPath.getAbsolutePath()) + "/app/thviews";
+        this.suffix = Play.configuration.getProperty("thymeleaf.suffix");
+        this.mode = Play.configuration.getProperty("thymeleaf.templatemode", "XHTML");
+        this.ttlString = Play.configuration.getProperty("thymeleaf.cache.ttl");
+    }
+    
+    @Override
+    public void onApplicationStart() {
         
         PlayTemplateResolver playResolver = new PlayTemplateResolver();
-        playResolver.setPrefix(Play.configuration.getProperty("thymeleaf.prefix", Play.applicationPath.getAbsolutePath()) + "/app/thviews");
+        playResolver.setPrefix(this.prefix);
 
-        if (Play.configuration.containsKey("thymeleaf.suffix")) {
-            playResolver.setSuffix(Play.configuration.getProperty("thymeleaf.suffix"));
+        if (this.suffix != null) {
+            playResolver.setSuffix(this.suffix);
         }
 
         ModuleTemplateResolver moduleResolver = new ModuleTemplateResolver(Play.modules.get("thymeleaf"));
 
-        String mode = Play.configuration.getProperty("thymeleaf.templatemode", "XHTML");
-        playResolver.setTemplateMode(mode);
+        playResolver.setTemplateMode(this.mode);
         moduleResolver.setTemplateMode("XHTML");
 
         switch (Play.mode) {
@@ -54,8 +72,7 @@ public class ThymeleafPlugin extends PlayPlugin {
             moduleResolver.setCacheable(false);
             break;
         default:
-            if (Play.configuration.containsKey("thymeleaf.cache.ttl")) {
-                String ttlString = Play.configuration.getProperty("thymeleaf.cache.ttl");
+            if (ttlString != null) {
                 if (!NumberUtils.isDigits(ttlString)) {
                     Logger.warn("Configuration 'thymeleaf.cache.ttl' value %s must be number(in millisecond).", ttlString);
                     ttlString = "0";

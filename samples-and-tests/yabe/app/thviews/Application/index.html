@@ -26,7 +26,7 @@
 
         <div th:if="${frontPost}" th:remove="tag">
 
-		<div th:include="/tags/display.html :: showPost" th:with="_post=${frontPost}, _as='home'">
+		<div th:remove="tag" th:include="/tags/display.html :: showPost" th:with="_post=${frontPost}, _as='home'">
 			latest post here.
 		</div>
 

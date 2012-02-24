@@ -6,3 +6,11 @@ the string inside () is parsed as an OGNL expression.
 
 Application.index({'green', 'red', 'blue'}) => list
 Application.index(#{'param1' : 'value1', 'param2' : 'value2', 'param3' : 'value3'}) => map
+
+
+
+Default html form method is GET, contrary to Play!'s POST.
+
+Play specific attributes.
+* pl:form
+* pl:href, pl:action, pl:src...

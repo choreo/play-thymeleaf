@@ -10,6 +10,7 @@ import play.modules.thymeleaf.UseThymeleaf;
 import java.util.*;
 import models.*;
  
+@UseThymeleaf
 public class Application extends Controller {
     
     @Before
@@ -18,7 +19,6 @@ public class Application extends Controller {
         renderArgs.put("blogBaseline", Play.configuration.getProperty("blog.baseline"));
     }
     
-    @UseThymeleaf
     public static void index() {
         Post frontPost = Post.find("order by postedAt desc").first();
         List<Post> olderPosts = Post.find("order by postedAt desc").from(1).fetch(10);

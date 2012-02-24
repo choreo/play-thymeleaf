@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+ 
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="/main.html :: head" th:with="title='Posts tagged with ' + ${tag}">
+<title>listTagged</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="../../../public/stylesheets/main.css" />
+</head>
+<body>
+
+	<div id="header" th:include="/main.html :: header">
+		<div id="logo">yabe.</div>
+		<ul id="tools">
+			<li><a href="../admin/index.html">Log in to write something</a></li>
+		</ul>
+		<div id="title">
+			<span class="about">About this blog</span>
+			<h1>
+				<a href="index.html">Blog Title</a>
+			</h1>
+			<h2>Baseline</h2>
+		</div>
+	</div>
+
+	<div id="main">
+		<span th:remove="all">
+		<!-- ********* Title ********* -->
+		</span>
+		<div th:switch="${posts.size()}" th:inline="text">
+		    <h3 th:case="0" style="display: none;" th:attr="style=''">No post tagged '[[${tag}]]'</h3>
+		    <h3 th:case="1">There is 1 post tagged '[[${tag}]]'</h3>  
+			<h3 th:case="*" style="display: none;" th:attr="style=''">There are [[${posts.size()}]] posts tagged '[[${tag}]]'</h3>  
+		</div>
+	 
+	 
+		<span th:remove="all">
+		<!-- ********* Posts list ********* -->
+		</span>
+		<div class="older-posts">
+			<span th:each="post : ${posts}" th:remove="tag" th:include="/tags/display.html :: showPost" th:with="_post=${post}, _as='teaser'">post teaser</span>
+		</div>
+    </div>
+
+    <p id="footer" th:include="/main.html :: footer">
+    footer
+    </p>
+</body>
+</html>
