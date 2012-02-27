@@ -6,7 +6,7 @@ import java.util.Set;
 import play.mvc.Scope.Params;
 
 /**
- * TODO DOCUMENT ME
+ * This class adapts Params instance as a Map.
  * 
  */
 

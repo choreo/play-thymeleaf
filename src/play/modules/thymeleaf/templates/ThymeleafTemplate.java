@@ -16,7 +16,7 @@ import play.templates.Template;
 import play.vfs.VirtualFile;
 
 /**
- * TODO DOCUMENT ME
+ * Plugin template class.
  */
 
 public class ThymeleafTemplate extends Template {
@@ -26,8 +26,13 @@ public class ThymeleafTemplate extends Template {
     
     private TemplateEngine templateEngine;
 
+    @SuppressWarnings("unused")
     private VirtualFile file;
     
+    /**
+     * @param templateEngine
+     * @param file
+     */
     public ThymeleafTemplate(TemplateEngine templateEngine, VirtualFile file) {
         this.templateEngine = templateEngine;
         this.file = file;
@@ -38,10 +43,12 @@ public class ThymeleafTemplate extends Template {
         Logger.trace("nothing to do");
     }
     
+    /**
+     * Calls TemplateEngine#process(String, org.thymeleaf.context.IContext).
+     * Also wraps "flash" and "params" variable objects by Map implementation for easy access by OGNL.
+     */
     @Override
     protected String internalRender(Map<String, Object> args) {
-        // the results of Lang.getLocale() and new Locale(Lang.get()) are not the same for the default locale.
-        // Groovy template extension uses the latter.
         if (!args.containsKey(EXT_EVALUATION_VARIABLE_NAME)) {
             args.put(EXT_EVALUATION_VARIABLE_NAME, EXTENSIONS);
         }
@@ -49,6 +56,8 @@ public class ThymeleafTemplate extends Template {
         args.put("flash", new FlashAdapter());
         args.put("params", new ParamsAdapter());
         
+        // the results of Lang.getLocale() and new Locale(Lang.get()) are not the same for the default locale.
+        // Groovy template extension uses the latter.
         Context context = new PlayContext(new Locale(Lang.get()), args);
         try {
             if (Logger.isTraceEnabled()) Logger.trace("args = %s", args);

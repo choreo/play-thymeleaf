@@ -7,24 +7,23 @@ import java.io.InputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.thymeleaf.Arguments;
 import org.thymeleaf.TemplateProcessingParameters;
-import org.thymeleaf.resourceresolver.FileResourceResolver;
 import org.thymeleaf.resourceresolver.IResourceResolver;
 import org.thymeleaf.util.Validate;
 
-import play.Play;
-import play.vfs.VirtualFile;
-
 /**
- * TODO DOCUMENT ME
+ * IResourceResolver implementation that returns FileInputStream.
  */
 
 public class PlayFileResourceResolver implements IResourceResolver {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
+    /** ResourceResolver name */
     public static final String NAME = "PLAY_FILE";
 
+    /**
+     * 
+     */
     public PlayFileResourceResolver() {
         super();
     }
@@ -34,6 +33,9 @@ public class PlayFileResourceResolver implements IResourceResolver {
         return NAME;
     }
 
+    /**
+     * Resolves resource and returns FileInputStream instance.
+     */
     @Override
     public InputStream getResourceAsStream(final TemplateProcessingParameters templateProcessingParameters, final String resourceName) {
         logger.debug("finding thymeleaf resource {} templatename = {}", resourceName,

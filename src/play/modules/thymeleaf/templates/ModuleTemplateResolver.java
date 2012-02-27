@@ -12,12 +12,16 @@ import org.thymeleaf.templateresolver.TemplateResolver;
 import play.vfs.VirtualFile;
 
 /**
- * TODO DOCUMENT ME
+ * TemplateResolver implementation for this plugin template files(404.html and 500.html).
  */
 
 public class ModuleTemplateResolver extends TemplateResolver {
     private String moduleName;
 
+    /**
+     * @param module
+     *            module root
+     */
     public ModuleTemplateResolver(VirtualFile module) {
         super();
         this.moduleName = module.getName();

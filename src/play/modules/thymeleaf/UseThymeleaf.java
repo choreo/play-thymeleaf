@@ -6,12 +6,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * TODO DOCUMENT ME
- * 
+ * Annotation class to mark either the Controller method or the whole class to
+ * be processed by Thymeleaf instead of Groovy.
  */
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD, ElementType.TYPE })
 public @interface UseThymeleaf {
-
+    //NOP
 }

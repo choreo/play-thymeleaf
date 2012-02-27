@@ -1,20 +1,18 @@
 package play.modules.thymeleaf.templates;
 
-import java.util.Set;
 
-import org.thymeleaf.Arguments;
 import org.thymeleaf.exceptions.ConfigurationException;
-import org.thymeleaf.resourceresolver.FileResourceResolver;
 import org.thymeleaf.resourceresolver.IResourceResolver;
 import org.thymeleaf.templateresolver.TemplateResolver;
 
-import play.Play;
-
 /**
- * TODO DOCUMENT ME
+ * Template resolver class associated with {@link PlayFileResourceResolver}.
  */
 
 public class PlayTemplateResolver extends TemplateResolver {
+    /**
+     * initializes PlayFileResourceResolver, too.
+     */
     public PlayTemplateResolver() {
         super();
         super.setResourceResolver(new PlayFileResourceResolver());

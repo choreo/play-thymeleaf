@@ -13,7 +13,8 @@ import play.classloading.enhancers.Enhancer;
 import play.exceptions.UnexpectedException;
 
 /**
- * TODO DOCUMENT ME
+ * Enhancer class that removes all synthetic flags from generated getter/setter
+ * methods of application classes formerly added by PropertiesEnhancer.
  */
 
 public class FixSyntheticEnhancer extends Enhancer {
@@ -24,7 +25,8 @@ public class FixSyntheticEnhancer extends Enhancer {
         if (ctClass.isInterface()) {
             return;
         }
-        if (ctClass.getName().endsWith(".package")) {
+        if (ctClass.getName()
+                   .endsWith(".package")) {
             return;
         }
 
@@ -32,29 +34,33 @@ public class FixSyntheticEnhancer extends Enhancer {
             try {
                 int mod = ctMethod.getModifiers();
                 if (mod != (AccessFlag.PUBLIC | AccessFlag.SYNTHETIC)) {
-                    //no need to be fixed
+                    // no need to be fixed
                     continue;
                 }
-                
+
                 String methodName = ctMethod.getName();
-                if(methodName.length() <= 3 || !(ctMethod.getName().startsWith("get") || ctMethod.getName().startsWith("set"))) {
-                    //not a property
+                if (methodName.length() <= 3 || !(ctMethod.getName()
+                                                          .startsWith("get") || ctMethod.getName()
+                                                                                        .startsWith("set"))) {
+                    // not a property
                     continue;
                 }
-                
-                String propertyName = ctMethod.getName().substring(3);
-                propertyName = propertyName.substring(0, 1).toLowerCase() + propertyName.substring(1);
-                
+
+                String propertyName = ctMethod.getName()
+                                              .substring(3);
+                propertyName = propertyName.substring(0, 1)
+                                           .toLowerCase() + propertyName.substring(1);
+
                 try {
                     CtField ctField = ctClass.getDeclaredField(propertyName);
-                    if(!isProperty(ctField)) {
+                    if (!isProperty(ctField)) {
                         continue;
                     }
-                } catch(NotFoundException e) {
-                    //not a property, so just ignore it.
+                } catch (NotFoundException e) {
+                    // not a property, so just ignore it.
                     continue;
                 }
-                
+
                 Logger.debug("removing synthetic flag from method %s#%s", ctClass.getName(), methodName);
                 ctMethod.setModifiers(ctMethod.getModifiers() ^ AccessFlag.SYNTHETIC);
 
@@ -65,22 +71,26 @@ public class FixSyntheticEnhancer extends Enhancer {
 
         }
 
-        //done
+        // done
         applicationClass.enhancedByteCode = ctClass.toBytecode();
         ctClass.defrost();
     }
-    
+
     /**
      * Is this field a valid javabean property ?
      */
     boolean isProperty(CtField ctField) {
-        if (ctField.getName().equals(ctField.getName().toUpperCase()) || ctField.getName().substring(0, 1).equals(ctField.getName().substring(0, 1).toUpperCase())) {
+        if (ctField.getName()
+                   .equals(ctField.getName()
+                                  .toUpperCase()) || ctField.getName()
+                                                            .substring(0, 1)
+                                                            .equals(ctField.getName()
+                                                                           .substring(0, 1)
+                                                                           .toUpperCase())) {
             return false;
         }
-        return Modifier.isPublic(ctField.getModifiers())
-                && !Modifier.isFinal(ctField.getModifiers())
-                && !Modifier.isStatic(ctField.getModifiers());
+        return Modifier.isPublic(ctField.getModifiers()) && !Modifier.isFinal(ctField.getModifiers())
+                        && !Modifier.isStatic(ctField.getModifiers());
     }
-
 
 }

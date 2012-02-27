@@ -21,7 +21,16 @@ import play.templates.Template;
 import play.vfs.VirtualFile;
 
 /**
- * TODO DOCUMENT ME
+ * The plugin class for thmeleaf template engine. The following configuration
+ * options are available. You can override them in application.conf.
+ * <ul>
+ * <li>thymeleaf.prefix - Prefix to append to the default template resolver.
+ * Default:$APP_PATH/app/thviews</li>
+ * <li>thymeleaf.suffix - Template suffix. Default: null</li>
+ * <li>thymeleaf.templatemode - Thymeleaf template mode. Default: XHTML</li>
+ * <li>thymeleaf.cache.ttl - template chache ttl in milliseconds for production mode.  Default: thymeleaf default </li>
+ * <li>thymeleaf.enhancer.enabled - whether to enhance the application classes in order to remove "synthetic" flags for OGNL.  Default: true</li>
+ * </ul>
  */
 
 public class ThymeleafPlugin extends PlayPlugin {
@@ -101,6 +110,9 @@ public class ThymeleafPlugin extends PlayPlugin {
         return templateEngine;
     }
 
+    /**
+     * Loads template from thymeleaf TemplateEngine if the annotation {@link UseThymeleaf} is present.
+     */
     @Override
     public Template loadTemplate(VirtualFile file) {
         if (Request.current() == null) {

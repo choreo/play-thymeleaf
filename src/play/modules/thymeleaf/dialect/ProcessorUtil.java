@@ -20,7 +20,7 @@ import play.mvc.Http.Request;
 import play.utils.Java;
 
 /**
- * TODO DOCUMENT ME
+ * Utility class for processor expressions.
  */
 
 class ProcessorUtil {
@@ -29,6 +29,15 @@ class ProcessorUtil {
     private ProcessorUtil() {
     }
     
+    /**
+     * Parses the playframework action expressions. The string inside "()" is
+     * evaluated by OGNL in the current context.
+     * 
+     * @param arguments
+     * @param attributeValue
+     *            e.g. "Application.show(obj.id)"
+     * @return parsed action path
+     */
     @SuppressWarnings("unchecked")
     static String toActionString(final Arguments arguments, String attributeValue) {
         Matcher matcher = PARAM_PATTERN.matcher(attributeValue);

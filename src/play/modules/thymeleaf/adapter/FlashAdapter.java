@@ -8,7 +8,7 @@ import java.util.Set;
 import play.mvc.Scope.Flash;
 
 /**
- * TODO DOCUMENT ME
+ * This class adapts Flash instance as a Map.
  */
 
 public class FlashAdapter implements Map<String, String> {

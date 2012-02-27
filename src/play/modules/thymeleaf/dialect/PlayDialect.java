@@ -8,7 +8,7 @@ import org.thymeleaf.dialect.AbstractDialect;
 import org.thymeleaf.processor.IProcessor;
 
 /**
- * TODO DOCUMENT ME
+ * A dialect class for Play!framework.
  */
 
 public class PlayDialect extends AbstractDialect {
@@ -28,6 +28,10 @@ public class PlayDialect extends AbstractDialect {
         return false;
     }
 
+    /**
+     * Registers {@link PlayActionAttributeModifierAttrProcessor} and
+     * {@link PlayFormAttrProcessor}.
+     */
     @Override
     public Set<IProcessor> getProcessors() {
         final Set<IProcessor> attrProcessors = new HashSet<IProcessor>();

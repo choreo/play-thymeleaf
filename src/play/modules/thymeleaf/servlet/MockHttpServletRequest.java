@@ -24,7 +24,7 @@ import play.mvc.Http.Request;
 import play.mvc.Scope.Session;
 
 /**
- * TODO DOCUMENT ME
+ * Mock HttpServletRequest class.  Internal use for LinkExpresion.
  */
 public class MockHttpServletRequest implements HttpServletRequest {
     private HttpSession session = new MockHttpSession();
@@ -36,7 +36,7 @@ public class MockHttpServletRequest implements HttpServletRequest {
     }
 
     @Override
-    public Enumeration getAttributeNames() {
+    public Enumeration<?> getAttributeNames() {
         // No impl
         return null;
     }
@@ -89,7 +89,7 @@ public class MockHttpServletRequest implements HttpServletRequest {
     }
 
     @Override
-    public Enumeration getLocales() {
+    public Enumeration<?> getLocales() {
         List<String> list = Request.current()
                                    .acceptLanguage();
         List<Locale> locales = new ArrayList<Locale>(list.size());
@@ -106,13 +106,13 @@ public class MockHttpServletRequest implements HttpServletRequest {
     }
 
     @Override
-    public Map getParameterMap() {
+    public Map<?, ?> getParameterMap() {
         // No impl
         return null;
     }
 
     @Override
-    public Enumeration getParameterNames() {
+    public Enumeration<?> getParameterNames() {
         // No impl
         return null;
     }
@@ -237,13 +237,13 @@ public class MockHttpServletRequest implements HttpServletRequest {
     }
 
     @Override
-    public Enumeration getHeaderNames() {
+    public Enumeration<?> getHeaderNames() {
         // No impl
         return null;
     }
 
     @Override
-    public Enumeration getHeaders(String arg0) {
+    public Enumeration<?> getHeaders(String arg0) {
         // No impl
         return null;
     }

@@ -13,16 +13,19 @@ import play.mvc.Http;
 import play.mvc.Scope.Session;
 
 /**
- * TODO DOCUMENT ME
+ * "form" Attribute Processor.  it acts like #{form /} tag in Groovy template.
  * 
  */
 
 public class PlayFormAttrProcessor extends AbstractAttributeModifierAttrProcessor {
+    /** attribute precedence */
     public static final int ATTR_PRECEDENCE = 1001;
+    /** processor name */
     public static final String ATTR_NAME = "form";
 
-    
-    
+    /**
+     * 
+     */
     public PlayFormAttrProcessor() {
         super(ATTR_NAME);
     }
@@ -50,7 +53,10 @@ public class PlayFormAttrProcessor extends AbstractAttributeModifierAttrProcesso
     }
 
 
-
+    /**
+     * Appends other attributes like Groovy template #{form /} tag.
+     * This is the sustitute for FastTags#_form(Map, groovy.lang.Closure, java.io.PrintWriter, play.templates.GroovyTemplate.ExecutableTemplate, int).
+     */
     @Override
     protected final Map<String,String> getModifiedAttributeValues(
             final Arguments arguments, final Element element, final String attributeName) {

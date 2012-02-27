@@ -9,7 +9,7 @@ import javax.servlet.http.HttpSessionContext;
 import play.mvc.Scope.Session;
 
 /**
- * TODO DOCUMENT ME
+ * Mock HttpSession class.  Internal use for LinkExpresion.
  */
 
 @SuppressWarnings("deprecation")
@@ -22,7 +22,7 @@ public class MockHttpSession implements HttpSession {
     }
 
     @Override
-    public Enumeration getAttributeNames() {
+    public Enumeration<?> getAttributeNames() {
         // No impl
         return null;
     }

@@ -10,18 +10,19 @@ import javax.servlet.http.HttpSession;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.context.IWebContext;
 import org.thymeleaf.context.VariablesMap;
-import org.thymeleaf.standard.expression.LinkExpression;
-
 import play.modules.thymeleaf.servlet.MockHttpServletRequest;
 
 
 /**
- * TODO DOCUMENT ME {@link LinkExpression}で使えるように。
+ * Context implementation for playframework.  This class impmlements IWebContexxt so thymeleaf LinkExpression can be available.
  */
-
 public class PlayContext extends Context implements IWebContext {
     private MockHttpServletRequest request = new MockHttpServletRequest();
 
+    /**
+     * @param locale
+     * @param args
+     */
     public PlayContext(Locale locale, Map<String, Object> args) {
         super(locale, args);
     }

@@ -1,20 +1,22 @@
 package play.modules.thymeleaf.dialect;
 
-import java.util.regex.Pattern;
-
 import org.thymeleaf.Arguments;
 import org.thymeleaf.dom.Element;
 import org.thymeleaf.processor.attr.AbstractSingleAttributeModifierAttrProcessor;
 import org.thymeleaf.util.PrefixUtils;
 
 /**
- * TODO DOCUMENT ME
+ * Attribute processor that handles play action expressions.
  * 
  */
 
 public class PlayActionAttributeModifierAttrProcessor extends AbstractSingleAttributeModifierAttrProcessor {
+    /** attribute precedence */
     public static final Integer ATTR_PRECEDENCE = Integer.valueOf(1000);
     
+    /**
+     * Attribute names this processor can handle.
+     */
     public static final String[] ATTR_NAMES = 
                     new String[] {
                             "action",
@@ -25,6 +27,7 @@ public class PlayActionAttributeModifierAttrProcessor extends AbstractSingleAttr
                             "value"
                     };
 
+    /** actual processor instances for each attribute name */
     public static final PlayActionAttributeModifierAttrProcessor[] PROCESSORS;
     
     static {
@@ -71,6 +74,10 @@ public class PlayActionAttributeModifierAttrProcessor extends AbstractSingleAttr
         return false;
     }
 
+    /**
+     * Parses the value using
+     * {@link ProcessorUtil#toActionString(Arguments, String)}
+     */
     @Override
     protected String getTargetAttributeValue(
             final Arguments arguments, final Element element, final String attributeName) {

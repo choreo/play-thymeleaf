@@ -2,3 +2,4 @@ eclipse
 samples-and-tests/yabe/tmp
 samples-and-tests/yabe/test-result
 dist
+samples-and-tests/yabe/precompiled
