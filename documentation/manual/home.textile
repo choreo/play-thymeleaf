@@ -61,14 +61,14 @@ public class Application extends Controller {
 
 Now the template like below in "app/thviews/Application/index.html" (by default) is used. 
 
-<pre><code>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" xmlns:th="http://www.thymeleaf.org">
-<body>
-<span th:text="${someObj.name}">The name comes here.</span>
-</body>
-</html>
-</code></pre>
+<code>
+@<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">@ 
+@<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" xmlns:th="http://www.thymeleaf.org">@
+@<body>@
+@<span th:text="${someObj.name}">The name comes here.</span>@
+@</body>@
+@</html>@
+</code>
 
 Or if you don't like all the actions to use thymeleaf, move the annotation to the method like:
 <pre>
@@ -105,14 +105,14 @@ The value of the attribute names below can be parsed as an action string.
 * value
 
 For example, define pl namespace and put some action string similar to groovy one, except for "${}".
-<pre><code>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:pl="http://www.playframework.org" >
-<body>
-<a href="anotherPage.html" pl:href="Application.anotherAction(someObj.id)">Link</a>
-</body>
-</html>
-</code></pre>
+<code>
+@<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">@ 
+@<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:pl="http://www.playframework.org" >@
+@<body>@
+@<a href="anotherPage.html" pl:href="Application.anotherAction(someObj.id)">Link</a>@
+@</body>@
+@</html>@
+</code>
 
 You can get the parsed link as expected since the string inside () is parsed as an OGNL expression within the same context of the page.
 
@@ -121,11 +121,11 @@ h3. Form Processor
 It acts like Fasttag #{form /}.  Authentication token hidden element will be inserted if the method is post.
 The default method of the form is 'GET' contrary to Groovy template.  You can override it with a normal html attribute like below: 
 
-<pre><code>
-<form pl:form="Put.yourAction()" method="post" >
+<code>
+@<form pl:form="Put.yourAction()" method="post" >@
 ...
-</form>
-</code></pre>
+@</form>@
+</code>
 
 
 h2. Notice
@@ -147,9 +147,9 @@ public class Address {
 
 The Play enhancer generates method User#getAddress() and Address#getStreet(), then a call from OGNL like: 
 
-<pre><code>
-<span th:text="${user.address.street}"></span>
-</code></pre>
+<code>
+@<span th:text="${user.address.street}"></span>@
+</code>
 
 would result in NPE because it cannot invoke the method.  So the module re-enhances application classes and removes synthetic flags in order to treat the enhanced objects like normal Java beans.  You can turn this off by a configuration parameter in case other precedent modules use the flags.  "${addr=user.address, addr.street}" can produce the same result.
 
