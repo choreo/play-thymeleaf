@@ -1,31 +1,154 @@
-h1. {module name}
+h1. Thymeleaf module
 
-p(note). Write your module documentation in this file, possibly linking to other Textile files, and delete these notes when you are finished.
+This is a Play framework module to use "Thymeleaf 2.0":http://www.thymeleaf.org/ as a template engine.
 
-p(note). Start with a clear statement of what the module is and what it is for. Link to any third-party libraries that the module is based on.
+Thymeleaf mainly uses the xml attributes, keeping the XML/XHTML/HTML5 templates well-formed.  As the "official site":http://www.thymeleaf.org/ says, those can be correctly displayed by browsers and therefore work also as static prototypes.
 
-p(note). Briefly describe why you might want to use this module in a Play application.
+This is NOT a whole replacement of the groovy template.  It is rather an add-on, rendering thymeleaf template only if the action is annotated. 
 
 h2. Sample application
 
-p(note). Your module should contain a sample app in the @sample@ directory that demonstrates the module. Describe how to run the demo here.
+Check out the "Yet Another Blog Engine" in the samples-and-tests directory.  It is copied from the framework original sample app, except groovy template files in "app/views/Application" are all replaced by the thymeleaf template files in "app/thviews", but you can get the same output. 
 
 h2. Getting started
 
-p(note). Describe any installation that is required, beyond adding and resolving the module dependency.
+Add the following line to your dependencies.yml:
+
+<pre>
+require:
+    - play
+    - play -> thymeleaf 0.0.1
+</pre>
+
+and call "play deps".  Remove 404.html and 500.html in "app/views". (the html errors are routed to thymeleaf template)
 
 h2. Configuration
 
-p(note). List any configuration options that the module uses, with an @h3.@ heading for each one.
+These are the options with default values.
+
+h3. # The place where you put thymeleaf template files
+
+h3. thymeleaf.prefix=${application.path}/app/thviews
+
+h3. thymeleaf.suffix=
+
+h3. # template mode of the engine
+
+h3. thymeleaf.templatemode=XHTML
+
+h3. # template chache ttl in milliseconds for production mode.  They are not cached in DEV mode.
+
+h3. thymeleaf.cache.ttl=
+
+h3. # whether to enhance the application classes in order to remove "synthetic" flags for OGNL
+
+h3. thymeleaf.enhancer.enabled=true
+
 
 h2. Usage
 
-p(note). Explain how to use the module, and describe any routes, controllers, models or views that the module provides.
+Annotate the class that you want to use thymeleaf with.
+<pre>
+@UseThymeleaf
+public class Application extends Controller {
+    public static void index() {
+        Object someObj = ....; 
+        render(someObj);
+    }
+}
+</pre>
 
-h2. Tags
+Now the template like below in "app/thviews/Application/index.html" (by default) is used. 
 
-p(note). List any tags the module provides, with an @h3.@ heading for each one. Include the tags’ arguments.
+<pre>
+&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt; 
+&lt;html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;body&gt;
+&lt;span th:text="${someObj.name}"&gt;The name comes here.&lt;/span&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
 
-h2. Commands
+Or if you don't like all the actions to use thymeleaf, move the annotation to the method like:
+<pre>
+public class Application extends Controller {
+    @UseThymeleaf
+    public static void index() {
+        Object someObj = ....; 
+        render(someObj);
+    }
+    
+    public static void anotherAction(Long id) {
+        render();
+    }
+}
+</pre>
 
-p(note). List any commands the module provides, with an @h3.@ heading for each one. Include the commands’ options.
+In that case, anotherAction(Long) method still uses groovy template.
+
+
+Please refer to the official "documentation":http://www.thymeleaf.org/documentation.html for the attribute and expressions usage.
+
+
+h2. Play specific processors
+
+h3. Action Processor
+
+There are some custom processors included in the module for action string conversion.
+The value of the attribute names below can be parsed as an action string.
+* action
+* href
+* name
+* src
+* type
+* value
+
+For example, define pl namespace and put some action string similar to groovy one, except for "${}".
+<pre>
+&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt; 
+&lt;html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:pl="http://www.playframework.org" &gt;
+&lt;body&gt;
+&lt;a href="anotherPage.html" pl:href="Application.anotherAction(someObj.id)">Link&lt;/a&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+You can get the parsed link as expected since the string inside () is parsed as an OGNL expression within the same context of the page.
+
+h3. Form Processor
+
+It acts like Fasttag #{form /}.  Authentication token hidden element will be inserted if the method is post.
+The default method of the form is 'GET' contrary to Groovy template.  You can override it with a normal html attribute like below: 
+
+<pre>
+&lt;form pl:form="Put.yourAction()" method="post" &gt;
+...
+&lt;/form&gt;
+</pre>
+
+
+h2. Notice
+
+h3. OGNL and class enhancement
+
+Thymeleaf makes use of OGNL as a standard template expression language, and it does not handle any method that has 'synthetic' flag, while Play! PropertiesEnhancer marks the generated implicit getter/setter methods 'synthetic' for a class that has public properties.  Suppose you have model classes User and Address:
+
+<pre>
+public class User {
+    public Address address;
+}
+
+public class Address {
+    public String street;
+}
+
+</pre>
+
+The Play enhancer generates method User#getAddress() and Address#getStreet(), then a call from OGNL like: 
+
+<pre>
+&lt;span th:text="${user.address.street}"
+</pre>
+
+would result in NPE because it cannot invoke the method.  So the module re-enhances application classes and removes synthetic flags in order to treat the enhanced objects like normal Java beans.  You can turn this off by a configuration parameter in case other precedent modules use the flags.  "${addr=user.address, addr.street}" can produce the same result.
+

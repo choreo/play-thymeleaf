@@ -24,8 +24,8 @@ import play.vfs.VirtualFile;
  * The plugin class for thmeleaf template engine. The following configuration
  * options are available. You can override them in application.conf.
  * <ul>
- * <li>thymeleaf.prefix - Prefix to append to the default template resolver.
- * Default:$APP_PATH/app/thviews</li>
+ * <li>thymeleaf.prefix - Prefix to prepend used by the default template resolver.
+ * Default:${application.path}/app/thviews</li>
  * <li>thymeleaf.suffix - Template suffix. Default: null</li>
  * <li>thymeleaf.templatemode - Thymeleaf template mode. Default: XHTML</li>
  * <li>thymeleaf.cache.ttl - template chache ttl in milliseconds for production mode.  Default: thymeleaf default </li>
