@@ -26,24 +26,25 @@ h2. Configuration
 
 These are the options with default values.
 
-h3. # The place where you put thymeleaf template files
 
 h3. thymeleaf.prefix=${application.path}/app/thviews
 
-h3. thymeleaf.suffix=
+The place where you put thymeleaf template files
 
-h3. # template mode of the engine
+h3. thymeleaf.suffix=
 
 h3. thymeleaf.templatemode=XHTML
 
-h3. # template chache ttl in milliseconds for production mode.  They are not cached in DEV mode.
+template mode of the engine
+
 
 h3. thymeleaf.cache.ttl=
 
-h3. # whether to enhance the application classes in order to remove "synthetic" flags for OGNL
+template chache ttl in milliseconds for production mode.  They are not cached in DEV mode.
 
 h3. thymeleaf.enhancer.enabled=true
 
+whether to enhance the application classes in order to remove "synthetic" flags for OGNL
 
 h2. Usage
 
@@ -60,14 +61,14 @@ public class Application extends Controller {
 
 Now the template like below in "app/thviews/Application/index.html" (by default) is used. 
 
-<pre>
-&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt; 
-&lt;html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" xmlns:th="http://www.thymeleaf.org"&gt;
-&lt;body&gt;
-&lt;span th:text="${someObj.name}"&gt;The name comes here.&lt;/span&gt;
-&lt;/body&gt;
-&lt;/html&gt;
-</pre>
+<pre><code>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<span th:text="${someObj.name}">The name comes here.</span>
+</body>
+</html>
+</code></pre>
 
 Or if you don't like all the actions to use thymeleaf, move the annotation to the method like:
 <pre>
@@ -104,14 +105,14 @@ The value of the attribute names below can be parsed as an action string.
 * value
 
 For example, define pl namespace and put some action string similar to groovy one, except for "${}".
-<pre>
-&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt; 
-&lt;html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:pl="http://www.playframework.org" &gt;
-&lt;body&gt;
-&lt;a href="anotherPage.html" pl:href="Application.anotherAction(someObj.id)">Link&lt;/a&gt;
-&lt;/body&gt;
-&lt;/html&gt;
-</pre>
+<pre><code>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:pl="http://www.playframework.org" >
+<body>
+<a href="anotherPage.html" pl:href="Application.anotherAction(someObj.id)">Link</a>
+</body>
+</html>
+</code></pre>
 
 You can get the parsed link as expected since the string inside () is parsed as an OGNL expression within the same context of the page.
 
@@ -120,11 +121,11 @@ h3. Form Processor
 It acts like Fasttag #{form /}.  Authentication token hidden element will be inserted if the method is post.
 The default method of the form is 'GET' contrary to Groovy template.  You can override it with a normal html attribute like below: 
 
-<pre>
-&lt;form pl:form="Put.yourAction()" method="post" &gt;
+<pre><code>
+<form pl:form="Put.yourAction()" method="post" >
 ...
-&lt;/form&gt;
-</pre>
+</form>
+</code></pre>
 
 
 h2. Notice
@@ -146,9 +147,9 @@ public class Address {
 
 The Play enhancer generates method User#getAddress() and Address#getStreet(), then a call from OGNL like: 
 
-<pre>
-&lt;span th:text="${user.address.street}"
-</pre>
+<pre><code>
+<span th:text="${user.address.street}"></span>
+</code></pre>
 
 would result in NPE because it cannot invoke the method.  So the module re-enhances application classes and removes synthetic flags in order to treat the enhanced objects like normal Java beans.  You can turn this off by a configuration parameter in case other precedent modules use the flags.  "${addr=user.address, addr.street}" can produce the same result.
 
