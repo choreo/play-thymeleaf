@@ -2,4 +2,4 @@ self: play -> thymeleaf 0.0.1
 
 require:
     - play
-    - org.thymeleaf -> thymeleaf 2.0.1
+    - org.thymeleaf -> thymeleaf 2.0.2
