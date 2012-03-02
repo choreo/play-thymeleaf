@@ -3,14 +3,16 @@ package play.modules.thymeleaf;
 import java.lang.reflect.Method;
 
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.templatemode.StandardTemplateModeHandlers;
+
 import play.Logger;
 import play.Play;
 import play.PlayPlugin;
 import play.classloading.ApplicationClasses.ApplicationClass;
 import play.modules.thymeleaf.dialect.PlayDialect;
-import play.modules.thymeleaf.templates.ModuleTemplateResolver;
 import play.modules.thymeleaf.templates.PlayTemplateResolver;
 import play.modules.thymeleaf.templates.ThymeleafTemplate;
 import play.mvc.ActionInvoker;
@@ -54,9 +56,9 @@ public class ThymeleafPlugin extends PlayPlugin {
     
     @Override
     public void onConfigurationRead() {
-        this.prefix = Play.configuration.getProperty("thymeleaf.prefix", Play.applicationPath.getAbsolutePath()) + "/app/thviews";
+        this.prefix = Play.configuration.getProperty("thymeleaf.prefix", "/app/thviews");
         this.suffix = Play.configuration.getProperty("thymeleaf.suffix");
-        this.mode = Play.configuration.getProperty("thymeleaf.templatemode", "XHTML");
+        this.mode = Play.configuration.getProperty("thymeleaf.templatemode",  StandardTemplateModeHandlers.XHTML.getTemplateModeName());
         this.ttlString = Play.configuration.getProperty("thymeleaf.cache.ttl");
     }
     
@@ -64,21 +66,20 @@ public class ThymeleafPlugin extends PlayPlugin {
     public void onApplicationStart() {
         
         PlayTemplateResolver playResolver = new PlayTemplateResolver();
+        VirtualFile throot = VirtualFile.open(Play.applicationPath).child(this.prefix);
         playResolver.setPrefix(this.prefix);
+        // add this path on top in order to search plugin template first
+        Play.templatesPath.add(0, throot);
 
         if (this.suffix != null) {
             playResolver.setSuffix(this.suffix);
         }
 
-        ModuleTemplateResolver moduleResolver = new ModuleTemplateResolver(Play.modules.get("thymeleaf"));
-
         playResolver.setTemplateMode(this.mode);
-        moduleResolver.setTemplateMode("XHTML");
 
         switch (Play.mode) {
         case DEV:
             playResolver.setCacheable(false);
-            moduleResolver.setCacheable(false);
             break;
         default:
             if (ttlString != null) {
@@ -87,14 +88,12 @@ public class ThymeleafPlugin extends PlayPlugin {
                     ttlString = "0";
                 }
                 playResolver.setCacheTTLMs(Long.valueOf(ttlString));
-                moduleResolver.setCacheTTLMs(Long.valueOf(ttlString));
             }
             break;
         }
         
         templateEngine = new TemplateEngine();
         templateEngine.addTemplateResolver(playResolver);
-        templateEngine.addTemplateResolver(moduleResolver);
         templateEngine.addDialect(new PlayDialect());
     }
 
@@ -111,54 +110,21 @@ public class ThymeleafPlugin extends PlayPlugin {
     }
 
     /**
-     * Loads template from thymeleaf TemplateEngine if the annotation {@link UseThymeleaf} is present.
+     * Loads template from thymeleaf TemplateEngine if the file is in the prefix path.
      */
     @Override
     public Template loadTemplate(VirtualFile file) {
-        if (Request.current() == null) {
-            // probably precompiling...
-            if (isErrorPage(file)) {
-                Template template = new ThymeleafTemplate(templateEngine, file);
-                template.name = file.relativePath();
-                return template;
-            }
+        String relativePath = file.relativePath();
+        String templatePath = StringUtils.removeStart(relativePath, this.prefix);
+        if(relativePath.length() == templatePath.length()) {
+            if(Logger.isDebugEnabled()) Logger.debug("%s is not in thymeleaf path", templatePath);
             return null;
         }
-
-        if (Request.current().controllerClass == null) {
-            if (!isErrorPage(file)) {
-                return null;
-            }
-
-        } else if (!isAnnotationPresent(Request.current().controllerClass)) {
-            Method m = (Method) ActionInvoker.getActionMethod(Http.Request.current().action)[1];
-            if (!m.isAnnotationPresent(UseThymeleaf.class)) {
-                return null;
-            }
-        }
+        
+        if (Logger.isDebugEnabled()) Logger.debug("loading %s from thymeleaf path %s", templatePath, this.prefix);
 
         Template template = new ThymeleafTemplate(templateEngine, file);
-        String path = file.relativePath();
-        // replace /app/views with thymeleaf prefix unless it is inside a module
-        template.name = path.startsWith("{") ? path : path.substring(10);
+        template.name = templatePath;
         return template;
     }
-
-    private boolean isErrorPage(VirtualFile file) {
-        return file.getName()
-                   .endsWith("404.html") || file.getName()
-                                                .endsWith("500.html");
-    }
-
-    private boolean isAnnotationPresent(Class<? extends Controller> clazz) {
-        Class<?> c = clazz;
-        while (!c.equals(Object.class)) {
-            if (c.isAnnotationPresent(UseThymeleaf.class)) {
-                return true;
-            }
-            c = c.getSuperclass();
-        }
-        return false;
-    }
-
 }

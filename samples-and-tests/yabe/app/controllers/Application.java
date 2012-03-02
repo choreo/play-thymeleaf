@@ -5,12 +5,12 @@ import play.mvc.*;
 import play.data.validation.*;
 import play.libs.*;
 import play.cache.*;
-import play.modules.thymeleaf.UseThymeleaf;
+import play.templates.TemplateLoader;
+import play.vfs.VirtualFile;
  
 import java.util.*;
 import models.*;
  
-@UseThymeleaf
 public class Application extends Controller {
     
     @Before
@@ -63,4 +63,7 @@ public class Application extends Controller {
         render(tag, posts);
     }
  
+    public static void indexForTest() {
+        render();
+    }
 }

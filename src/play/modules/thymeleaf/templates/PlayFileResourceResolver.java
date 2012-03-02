@@ -11,6 +11,8 @@ import org.thymeleaf.TemplateProcessingParameters;
 import org.thymeleaf.resourceresolver.IResourceResolver;
 import org.thymeleaf.util.Validate;
 
+import play.Play;
+
 /**
  * IResourceResolver implementation that returns FileInputStream.
  */
@@ -38,10 +40,11 @@ public class PlayFileResourceResolver implements IResourceResolver {
      */
     @Override
     public InputStream getResourceAsStream(final TemplateProcessingParameters templateProcessingParameters, final String resourceName) {
-        logger.debug("finding thymeleaf resource {} templatename = {}", resourceName,
-                        templateProcessingParameters.getTemplateName());
+        if (logger.isDebugEnabled())
+            logger.debug("locating thymeleaf resource {} templatename = {}", resourceName, templateProcessingParameters.getTemplateName());
+
         Validate.notNull(resourceName, "Resource name cannot be null");
-        final File resourceFile = new File(resourceName);
+        final File resourceFile = new File(Play.applicationPath, resourceName);
         try {
             return new FileInputStream(resourceFile);
         } catch (FileNotFoundException e) {

@@ -57,8 +57,8 @@ html,body {
 }
 </style>
 </head>
-<body th:fragment="notfound" th:remove="tag" th:inline="text">
-	<div id="header" class="block">
+<body th:fragment="notfound" th:remove="tag">
+	<div id="header" class="block" th:inline="text">
 		<h1>Not found</h1>
 		<p>[[${result.message}]]</p>
 	</div>

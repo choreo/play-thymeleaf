@@ -3,11 +3,11 @@
 <head>
 <title>Application error</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<style type="text/css" th:substituteby="${'{module:' + @play.Play@modules.get('thymeleaf').name + '}/app/views/fragment/500.html'} :: style"></style>
+<style type="text/css" th:substituteby="/fragment/500.html :: style"></style>
 </head>
 <body>
 	<div th:if="${@play.Play@mode.name() == 'DEV'}" th:remove="tag">
-		<div style="display: none;" th:substituteby="${'{module:' + @play.Play@modules.get('thymeleaf').name + '}/app/views/fragment/500.html'} :: error">ERROR</div>
+		<div style="display: none;" th:substituteby="/fragment/500.html :: error">ERROR</div>
 	</div>
 	<div th:if="${@play.Play@mode.name() == 'PROD'}" th:remove="tag">
 		<h1>Oops, an error occured</h1>

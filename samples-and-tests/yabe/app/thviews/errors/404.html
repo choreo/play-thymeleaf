@@ -3,15 +3,15 @@
 <head>
 <title>Not found</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<style type="text/css" th:substituteby="${'{module:' + @play.Play@modules.get('thymeleaf').name + '}/app/views/fragment/404.html'} :: style"></style>
+<style type="text/css" th:substituteby="/fragment/404.html :: style"></style>
 </head>
 <body>
 	<div th:if="${@play.Play@mode.name() == 'DEV'}" th:remove="tag" th:inline="text">
-		<div style="display: none;" th:substituteby="${'{module:' + @play.Play@modules.get('thymeleaf').name + '}/app/views/fragment/404.html'} :: notfound">Not found</div>
+		<div style="display: none;" th:substituteby="/fragment/404.html :: notfound">Not found</div>
 	</div>
 	<div th:unless="${@play.Play@mode.name() == 'DEV'}" th:remove="tag">
 		<h1>Not found</h1>
-		<p>[[${result.message}]]</p>
+		<p th:inline="text">[[${result.message}]]</p>
 	</div>
 </body>
 </html>
