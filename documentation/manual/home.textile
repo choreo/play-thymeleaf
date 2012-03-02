@@ -4,7 +4,7 @@ This is a Play framework module to use "Thymeleaf 2.0":http://www.thymeleaf.org/
 
 Thymeleaf mainly uses the xml attributes, keeping the XML/XHTML/HTML5 templates well-formed.  As the "official site":http://www.thymeleaf.org/ says, those can be correctly displayed by browsers and therefore work also as static prototypes.
 
-This is NOT a whole replacement of the groovy template.  It is rather an add-on, rendering thymeleaf template only if the action is annotated. 
+This is NOT a whole replacement of the groovy template.  It is rather an add-on, rendering thymeleaf template only if the alternative template exists. 
 
 h2. Sample application
 
@@ -48,18 +48,7 @@ whether to enhance the application classes in order to remove "synthetic" flags 
 
 h2. Usage
 
-Annotate the class that you want to use thymeleaf with.
-<pre>
-@UseThymeleaf
-public class Application extends Controller {
-    public static void index() {
-        Object someObj = ....; 
-        render(someObj);
-    }
-}
-</pre>
-
-Now the template like below in "app/thviews/Application/index.html" (by default) is used. 
+Put thymeleaf well-formed template files like below in "app/thviews" (by default). 
 
 <code>
 @<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">@ 
@@ -69,24 +58,6 @@ Now the template like below in "app/thviews/Application/index.html" (by default)
 @</body>@
 @</html>@
 </code>
-
-Or if you don't like all the actions to use thymeleaf, move the annotation to the method like:
-<pre>
-public class Application extends Controller {
-    @UseThymeleaf
-    public static void index() {
-        Object someObj = ....; 
-        render(someObj);
-    }
-    
-    public static void anotherAction(Long id) {
-        render();
-    }
-}
-</pre>
-
-In that case, anotherAction(Long) method still uses groovy template.
-
 
 Please refer to the official "documentation":http://www.thymeleaf.org/documentation.html for the attribute and expressions usage.
 
