@@ -1,7 +1,5 @@
 package play.modules.thymeleaf;
 
-import java.lang.reflect.Method;
-
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
@@ -15,10 +13,6 @@ import play.classloading.ApplicationClasses.ApplicationClass;
 import play.modules.thymeleaf.dialect.PlayDialect;
 import play.modules.thymeleaf.templates.PlayTemplateResolver;
 import play.modules.thymeleaf.templates.ThymeleafTemplate;
-import play.mvc.ActionInvoker;
-import play.mvc.Controller;
-import play.mvc.Http;
-import play.mvc.Http.Request;
 import play.templates.Template;
 import play.vfs.VirtualFile;
 
