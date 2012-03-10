@@ -9,6 +9,7 @@ This is NOT a whole replacement of the groovy template.  It is rather an add-on,
 h2. Sample application
 
 Check out the "Yet Another Blog Engine" in the samples-and-tests directory.  It is copied from the framework original sample app, except groovy template files in "app/views/Application" are all replaced by the thymeleaf template files in "app/thviews", but you can get the same output. 
+Be sure to do "play deps" before you run the app.
 
 h2. Getting started
 
