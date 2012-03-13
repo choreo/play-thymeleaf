@@ -37,6 +37,7 @@ public class PlayDialect extends AbstractDialect {
         final Set<IProcessor> attrProcessors = new HashSet<IProcessor>();
         attrProcessors.addAll(Arrays.asList(PlayActionAttributeModifierAttrProcessor.PROCESSORS));
         attrProcessors.add(new PlayFormAttrProcessor());
+        attrProcessors.add(new PlayErrorAttrProcessor());
         
         return attrProcessors;
     }
