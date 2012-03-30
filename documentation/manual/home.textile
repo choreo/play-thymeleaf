@@ -99,6 +99,13 @@ The default method of the form is 'GET' contrary to Groovy template.  You can ov
 @</form>@
 </code>
 
+h2. Extra implicit objects
+
+* play.templates.JavaExtensions instance is availabe as 'ext': ${ext.nl2br('line\nNewline')}
+
+h2. Message Resolution
+
+By default, thymeleaf's StandardMessageReolver is used.  Add PlayMessageResolver to TemplateEngine that resloves messages with play.i18n.Messages.
 
 h2. Notice
 
