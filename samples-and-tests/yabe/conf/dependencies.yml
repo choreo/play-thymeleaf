@@ -2,4 +2,4 @@
 
 require:
     - play
-    - play -> thymeleaf 1.0
+    - play -> thymeleaf 1.1
