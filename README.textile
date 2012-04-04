@@ -6,10 +6,11 @@ p. A Play framework module to use "Thymeleaf 2.0":http://www.thymeleaf.org/ as a
 
 h2. Version History:
 
-* 2012/04/04 v1.1:
+h3. 2012/04/04 v1.1:
+
 # Updated dependency to thymeleaf 2.0.5
 # Added Error processor (pl:error) 
 # Added optional template resolver class that loads template files from module
 # Added optional PlayMessageResolver
 
-* 2012/03/09 v1.0: First release.
+h3. 2012/03/09 v1.0: First release.
