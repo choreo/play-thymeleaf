@@ -99,13 +99,27 @@ The default method of the form is 'GET' contrary to Groovy template.  You can ov
 @</form>@
 </code>
 
+h3. Error Processor
+
+"error" Attribute Processor acts like #{error /} tag in Groovy template. In the sample code below, the span tag appears only if there is an error.
+
+<code>
+@<input type="text" name="user.name" th:value="${user?user.name:null}" /><span class="error" pl:error="user.name">validation error comes here.</span>@
+</code>
+
 h2. Extra implicit objects
 
 * play.templates.JavaExtensions instance is availabe as 'ext': ${ext.nl2br('line\nNewline')}
 
 h2. Message Resolution
 
-By default, thymeleaf's StandardMessageReolver is used.  Add PlayMessageResolver to TemplateEngine that resloves messages with play.i18n.Messages.
+By default, thymeleaf's StandardMessageReolver is used.  Add PlayMessageResolver to TemplateEngine so that the messages are resolved by  play.i18n.Messages.
+
+<code>
+        Play.plugin(ThymeleafPlugin.class)
+            .getTemplateEngine()
+            .addMessageResolver(new PlayMessageResolver());
+</code>
 
 h2. Notice
 
