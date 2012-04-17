@@ -27,6 +27,7 @@ import play.i18n.Lang;
 import play.modules.thymeleaf.ThymeleafPlayException;
 import play.modules.thymeleaf.adapter.FlashAdapter;
 import play.modules.thymeleaf.adapter.ParamsAdapter;
+import play.modules.thymeleaf.adapter.SessionAdapter;
 import play.templates.JavaExtensions;
 import play.templates.Template;
 import play.vfs.VirtualFile;
@@ -69,6 +70,7 @@ public class ThymeleafTemplate extends Template {
             args.put(EXT_EVALUATION_VARIABLE_NAME, EXTENSIONS);
         }
         
+        args.put("session", new SessionAdapter());
         args.put("flash", new FlashAdapter());
         args.put("params", new ParamsAdapter());
         
