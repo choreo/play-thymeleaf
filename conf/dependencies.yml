@@ -1,4 +1,4 @@
-self: play -> thymeleaf 1.1
+self: play -> thymeleaf 1.2
 
 require:
     - play
