@@ -114,4 +114,10 @@ public class SessionAdapter implements Map<String, String> {
         return this.dataMap;
     }
 
+    /**
+     * @return session authenticity token
+     */
+    public String getAuthenticityToken() {
+        return session.getAuthenticityToken();
+    }
 }
