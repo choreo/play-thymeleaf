@@ -6,6 +6,10 @@ p. A Play framework module to use "Thymeleaf 2.0":http://www.thymeleaf.org/ as a
 
 h2. Version History:
 
+h3. 2012/xx/xx v1.3:
+
+# Updated to thymeleaf v2.0.8
+ 
 h3. 2012/04/18 v1.2:
 
 # Added SessionAdapter 
