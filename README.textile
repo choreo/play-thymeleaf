@@ -9,6 +9,7 @@ h2. Version History:
 h3. 2012/xx/xx v1.3:
 
 # Updated to thymeleaf v2.0.8
+# Fixed ClassNotFoundException for static application class in template
  
 h3. 2012/04/18 v1.2:
 
