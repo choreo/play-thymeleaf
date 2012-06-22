@@ -15,6 +15,8 @@
  */
 package play.modules.thymeleaf;
 
+import java.util.List;
+
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
@@ -25,7 +27,9 @@ import play.Logger;
 import play.Play;
 import play.PlayPlugin;
 import play.classloading.ApplicationClasses.ApplicationClass;
+import play.modules.thymeleaf.dialect.FixedStandardDialect;
 import play.modules.thymeleaf.dialect.PlayDialect;
+import play.modules.thymeleaf.dialect.PlayOgnlExpressionEvaluator;
 import play.modules.thymeleaf.templates.PlayTemplateResolver;
 import play.modules.thymeleaf.templates.ThymeleafTemplate;
 import play.templates.Template;
@@ -61,6 +65,12 @@ public class ThymeleafPlugin extends PlayPlugin {
     public void onLoad() {
         this.enhancerEnabled = BooleanUtils.toBoolean(Play.configuration.getProperty("thymeleaf.enhancer.enabled", "true"));
         Logger.debug("thymeleaf plugin enhancer enabled ? :%s", enhancerEnabled);
+    }
+
+    @Override
+    public List<ApplicationClass> onClassesChange(List<ApplicationClass> modified) {
+        PlayOgnlExpressionEvaluator.INSTANCE.clearClassCache();
+        return super.onClassesChange(modified);
     }
     
     @Override
@@ -103,6 +113,7 @@ public class ThymeleafPlugin extends PlayPlugin {
         
         templateEngine = new TemplateEngine();
         templateEngine.addTemplateResolver(playResolver);
+        templateEngine.setDialect(new FixedStandardDialect());
         templateEngine.addDialect(new PlayDialect());
     }
 
