@@ -12,5 +12,7 @@ public class PluginTest extends FunctionalTest {
         assertIsOk(response);
         assertContentType("text/html", response);
         assertCharset(play.Play.defaultWebEncoding, response);
+        
+        assertContentMatch("refer this value from thymeleaf template", response);
     }
 }

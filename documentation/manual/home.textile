@@ -146,3 +146,7 @@ The Play enhancer generates method User#getAddress() and Address#getStreet(), th
 
 would result in NPE because it cannot invoke the method.  So the module re-enhances application classes and removes synthetic flags in order to treat the enhanced objects like normal Java beans.  You can turn this off by a configuration parameter in case other precedent modules use the flags.  "${addr=user.address, addr.street}" can produce the same result.
 
+
+h2. History
+
+Version history is at github : "https://github.com/choreo/play-thymeleaf":https://github.com/choreo/play-thymeleaf

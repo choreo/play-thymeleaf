@@ -12,6 +12,7 @@ import java.util.*;
 import models.*;
  
 public class Application extends Controller {
+    public static String TEST_STATIC_VALUE = "refer this value from thymeleaf template";
     
     @Before
     static void addDefaults() {

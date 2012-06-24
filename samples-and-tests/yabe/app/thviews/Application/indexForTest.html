@@ -23,6 +23,7 @@
 	</div>
 
 	<div id="main">
+		<div th:text="${@controllers.Application@TEST_STATIC_VALUE}">Test value comes here.</div>
 
         <div th:if="${frontPost}" th:remove="tag">
 
