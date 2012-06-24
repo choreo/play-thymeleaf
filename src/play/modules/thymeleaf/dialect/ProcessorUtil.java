@@ -25,7 +25,6 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.thymeleaf.Arguments;
-import org.thymeleaf.standard.expression.OgnlExpressionEvaluator;
 
 import play.Logger;
 import play.exceptions.ActionNotFoundException;
@@ -67,7 +66,7 @@ class ProcessorUtil {
                          .toString();
         }
         
-        Object obj = OgnlExpressionEvaluator.INSTANCE.evaluate(arguments, exp, arguments.getExpressionEvaluationRoot());
+        Object obj = PlayOgnlExpressionEvaluator.INSTANCE.evaluate(arguments, exp, arguments.getExpressionEvaluationRoot());
         if (obj instanceof Map) {
             return Router.reverse(attributeValue, (Map<String, Object>) obj)
                          .toString();
