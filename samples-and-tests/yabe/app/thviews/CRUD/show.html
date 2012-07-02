@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<title th:text="${title}">Home</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" media="screen" href="/public/stylesheets/crud.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="/public/stylesheets/tags.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="/public/stylesheets/main.css" />
+</head>
+
+<body id="admin">
+<div id="header">
+            <div id="logo">
+                yabe. <span>administration</span>
+            </div>
+            <ul id="tools">
+                <li>
+                    <a pl:href="Secure.logout">Log out</a>
+                </li>
+            </ul>
+        </div>
+        
+<div id="main">
+	<ul id="adminMenu">
+        <li th:class="${request.controller == 'Admin' ? 'selected' : ''}">
+            <a pl:href="Admin.index">My posts</a>
+        </li>
+            <li th:class="${request.controller == 'Posts' ? 'selected' : ''}">
+                <a th:href="@{/admin/posts}">Posts</a>
+            </li>
+            <li th:class="${request.controller == 'Tags' ? 'selected' : ''}">
+                <a th:href="@{/admin/tags}">Tags</a>
+            </li>
+            <li th:class="${request.controller == 'Comments' ? 'selected' : ''}">
+                <a th:href="@{/admin/comments}">Comments</a>
+            </li>
+            <li th:class="${request.controller == 'Users' ? 'selected' : ''}">
+                <a th:href="@{/admin/users}">Users</a>
+            </li>
+    </ul>
+    
+<div id="crud">
+	<div class="crudFlash flashSuccess" th:if="${flash.success}" th:text="${flash.success}">更新しました</div>
+	<div class="crudFlash flashError" th:if="${flash.error || error}" th:text="${error ? error:flash.error}">エラーがあります</div>
+<div id="crudContent">
+
+<div id="crudShow" th:class="${type.name}">
+
+    <h2 id="crudShowTitle" th:text="#{crud.show.title(${type.modelName})}">Edit Site</h2>
+    
+    <!-- <span th:remove="tag" th:with="data='name,createdBy'"> -->
+		<div class="objectForm" th:fragment="crudedit">	
+		<form action="list.html" th:action="${type.listAction+'/'+object._key()}" method="post" accept-charset="utf-8" enctype="multipart/form-data">
+		
+		<span th:if="${#strings.isEmpty(data)}">
+			<span th:remove="tag" th:each="field, iterStat: ${type.fields}">
+			<div class="crudField crud_text" th:class="${'crudField crud_'+field.type}" th:substituteby="/CRUD/fragment/form.html :: crudeditform">
+			</div>
+			</span>
+		</span>
+		
+		<span th:unless="${#strings.isEmpty(data)}">
+			<span th:remove="tag" th:each="tmp,iterStat: ${#strings.listSplit(data,',')}">
+			<span th:remove="tag" th:with="field=${type.getField(tmp)}">
+			<div class="crudField crud_text" th:class="${'crudField crud_'+field.type}" th:substituteby="/CRUD/fragment/form.html :: crudeditform">
+			</div>
+			</span>
+			</span>
+		</span>	
+		
+	    <p class="crudButtons">
+	        <input type="submit" name="_save" value="保存" th:value="#{crud.save}"/>
+	        <input type="submit" name="_saveAndContinue" value="保存して処理を継続" th:value="#{crud.saveAndContinue}" />
+	    </p>
+		</form>
+	    </div>
+	 <!--  </span> -->
+    
+    
+	<form action="list.html" th:action="${type.listAction+'/'+object._key() + '?x-http-method-override=DELETE'}" method="post" th:fragment="cruddelete">
+		<p class="crudDelete">
+	        <input type="submit" value="削除" th:value="#{crud.delete(${type.modelName})}"/>
+	    </p>
+	</form>
+
+</div>
+
+</div>
+
+</div>
+</div>
+<p id="footer">
+            Yabe is a (not so) powerful blog engine built with the 
+            <a href="http://www.playframework.org">play framework</a>
+            as a tutorial application.
+        </p>
+   
+</body>
+</html>

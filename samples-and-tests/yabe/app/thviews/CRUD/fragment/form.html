@@ -1,0 +1,96 @@
+<html>
+<head></head>
+<body>
+<form>
+<div class="crudField crud_text" th:class="${'crudField crud_'+field.type}" th:switch="${field.type}" th:with="fieldname=${'object.'+field.name}" th:fragment="crudeditform">
+	<span th:case="'text'" th:remove="tag" >
+		<label for="1" th:for="${'object_'+field.name}" th:text="#{${field.name}}">name</label>
+	   	<input id="1" th:id="${'object_'+field.name}" th:class="${errors.forKey(fieldname)?'hasError':''}" th:name="${fieldname}" th:value="${object[field.name]}" size="50" />
+	   	<span class="error" th:text="${errors.forKey(fieldname)}" th:if="${errors.forKey(fieldname)}">入力エラー</span>
+	</span>
+	<span th:case="'number'" th:remove="tag">
+		<label for="1" th:for="${'object_'+field.name}" th:text="#{${field.name}}">name</label>
+	   	<input id="1" th:id="${'object_'+field.name}" th:class="${errors.forKey(fieldname)?'hasError':''}" th:name="${fieldname}" th:value="${object[field.name]}" size="5" />
+	   	<span class="error" th:text="${errors.forKey(fieldname)}" th:if="${errors.forKey(fieldname)}">入力エラー</span>
+	   	<span class="crudHelp" th:text="#{crud.help.numeric}">数値</span>
+	</span>
+	
+	<span th:case="'date'" th:remove="tag" th:with="fieldname=${'object.'+field.name}">
+	    <label for="1" th:for="${'object_'+field.name}" th:text="${field.name}">name</label>
+	    <input id="1" th:id="${'object_'+field.name}" type="text" th:name="${fieldname}" th:value="${#dates.format(object[field.name], @play.libs.I18N@getDateFormat())}" size="10" />
+	    <span class="crudHelp" th:text="#{crud.help.dateformat(${@play.libs.I18N@getDateFormat()})}"></span>
+	    <span class="error" th:text="${errors.forKey(fieldname)}" th:if="${errors.forKey(fieldname)}">入力エラー</span>
+	</span>
+	
+	<span th:case="'serializedTextField'" th:remove="tag" th:with="fieldname=${'object.'+field.name}">
+	    <label for="1" th:for="${'object_'+field.name}" type="text" th:text="${field.name}">name</label>
+	   	<input id="1" th:id="${'object_'+field.name}" th:class="${errors.forKey(fieldname)?'hasError':''}" th:name="${fieldname}" th:value="${object[field.name]}" size="50" />
+	   	<span class="error" th:text="${errors.forKey(fieldname)}" th:if="${errors.forKey(fieldname)}">入力エラー</span>
+    </span>
+    	
+   	<span th:case="'passwordField'" th:remove="tag" th:with="fieldname=${'object.'+field.name}">
+	   	<label for="1" th:for="${'object_'+field.name}" type="password" th:text="${field.name}">name</label>
+	   	<input id="1" th:id="${'object_'+field.name}" th:class="${errors.forKey(fieldname)?'hasError':''}" th:name="${fieldname}" th:value="${object[field.name]}" size="50" />
+	   	<span class="error" th:text="${errors.forKey(fieldname)}" th:if="${errors.forKey(fieldname)}">入力エラー</span>
+   	</span>
+
+	<span th:case="'relation'" th:remove="tag" th:with="fieldname=${'object.'+field.name}">
+	    <label for="1" th:for="${'object_'+field.name}" th:text="#{${field.name}}">relation</label>
+		<select th:id="${'object_'+field.name}" th:name="${fieldname + '.id'}">
+			<option value="" th:text="#{crud.selectValue}" th:if="${field.required}"></option>
+			<option value="" th:text="#{crud.none}" th:unless="${field.required}"></option>
+			<option th:each="val, iterStat: ${field.choices}" th:value="${val._key()}" th:text="${val}" th:selected="${(object[field.name]) ? (val.toString()==object[field.name].toString()) : 'false'}"></option>
+	     </select>
+	   	<span class="error" th:text="${errors.forKey(fieldname)}" th:if="${errors.forKey(fieldname)}">入力エラー</span>
+   	</span>
+
+	<span th:case="'enum'" th:remove="tag" th:with="fieldname=${'object.'+field.name}">
+	    <label for="1" th:for="${'object_'+field.name}" th:text="#{${field.name}}">relation</label>
+		<select th:id="${'object_'+field.name}" th:name="${fieldname}">
+			<option th:each="val, iterStat: ${field.choices}" th:name="${val.name()}" th:attr="ord=${val.ordinal()}" th:value="${val.name()}" th:text="${val}" th:selected="${(object[field.name]) ? (val.toString()==object[field.name].toString()) : 'false'}"></option>
+	     </select>
+	   	<span class="error" th:text="${errors.forKey(fieldname)}" th:if="${errors.forKey(fieldname)}">入力エラー</span>
+   	</span>
+   	
+   	<span th:case="'binary'" th:remove="tag" th:with="fieldname=${'object.'+field.name}">
+   		<label for="1" th:for="${'object_'+field.name}" th:text="#{${field.name}}">binary</label>
+	    <input th:id="${'object_'+field.name}" th:class="${errors.forKey(fieldname)?'hasError':''}" type="file" th:name="${fieldname}" />
+	    <span class="error" th:text="${errors.forKey(fieldname)}" th:if="${errors.forKey(fieldname)}">入力エラー</span>
+	    <a class="currentAttachment" th:href="${type.listAction+'/'+object._key()+'/'+field.name}" th:if="${object[field.name].exists()}">Download</a>
+        <span class="removeAttachment" th:if="${object[field.name].exists()}"><input type="checkbox" th:name="${fieldname+'_delete_'}" value="true" th:if="${object[field.name]}"/> (delete)</span>
+   	</span>
+   	
+   	<span th:case="'longtext'" th:remove="tag" th:with="fieldname=${'object.'+field.name}">
+   		<label for="1" th:for="${'object_'+field.name}" th:text="#{${field.name}}">binary</label>
+   		<textarea id="1" th:id="${'object_'+field.name}" cols="48" rows="5" th:class="${errors.forKey(fieldname)?'hasError':''}" th:name="${fieldname}" th:text="${object[field.name]}"></textarea>
+	   	<span class="error" th:text="${errors.forKey(fieldname)}" th:if="${errors.forKey(fieldname)}">入力エラー</span>
+   	</span>
+   	
+   	<span th:case="'boolean'" th:remove="tag" th:with="fieldname=${'object.'+field.name}">
+   		<label for="1" th:for="${'object_'+field.name}" th:text="#{${field.name}}">boolean</label>
+	    <input th:id="${'object_'+field.name}" th:class="${errors.forKey(fieldname)?'hasError':''}" type="checkbox" th:name="${fieldname}" value="true" th:checked="${object[field.name]}"/>
+    	<input type="hidden" th:name="${fieldname}" value="false" />
+    	<span class="error" th:text="${errors.forKey(fieldname)}" th:if="${errors.forKey(fieldname)}">入力エラー</span>
+   	</span>
+   	
+   	<span th:case="'hidden'" th:remove="tag" th:with="fieldname=${'object.'+field.name}">
+		<input id="1" th:id="${'object_'+field.name}" type="hidden" th:class="${errors.forKey(fieldname)?'hasError':''}" th:name="${fieldname}" th:value="${object[field.name]}" size="50" />
+	   	<span class="error" th:text="${errors.forKey(fieldname)}" th:if="${errors.forKey(fieldname)}">入力エラー</span>
+   	</span>
+   	
+	<span class="crudHelp">
+	<span th:each="valid, iterStat: ${@play.data.validation.Validation@getValidators(type.entityClass, field.name, 'object')}" th:remove="tag">
+		<span th:switch="${valid.annotation.annotationType().getName().substring(21)}" th:remove="tag">
+			<span th:case="'Required'" th:text="#{crud.help.required}">必須入力</span>
+			<span th:case="'MinSize'" th:text="#{crud.help.minlength(${valid.annotation.value()})}">最小10桁</span>
+			<span th:case="'MaxSize'" th:text="#{crud.help.maxlength(${valid.annotation.value()})}">最大10桁</span>
+			<span th:case="'Range'" th:text="#{crud.help.range(${valid.annotation.min()}, ${valid.annotation.max()})}">1から10まで</span>
+			<span th:case="'Min'" th:txt="#{crud.help.min(${valid.annotation.value()})}">1以上</span>
+			<span th:case="'Email'" th:text="#{crud.help.Email}">Email</span>
+		</span>
+	</span>
+</span>
+</div>
+</form>
+</body>
+</html>
