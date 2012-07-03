@@ -48,7 +48,6 @@
 
     <h2 id="crudShowTitle" th:text="#{crud.show.title(${type.modelName})}">Edit Site</h2>
     
-    <!-- <span th:remove="tag" th:with="data='name,createdBy'"> -->
 		<div class="objectForm" th:fragment="crudedit">	
 		<form action="list.html" th:action="${type.listAction+'/'+object._key()}" method="post" accept-charset="utf-8" enctype="multipart/form-data">
 		
@@ -74,8 +73,6 @@
 	    </p>
 		</form>
 	    </div>
-	 <!--  </span> -->
-    
     
 	<form action="list.html" th:action="${type.listAction+'/'+object._key() + '?x-http-method-override=DELETE'}" method="post" th:fragment="cruddelete">
 		<p class="crudDelete">
