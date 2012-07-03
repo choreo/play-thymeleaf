@@ -28,8 +28,8 @@
     </ul>
     
 <div id="crud">
-	<div class="crudFlash flashSuccess" th:if="${flash.success}" th:text="${flash.success}">更新しました</div>
-	<div class="crudFlash flashError" th:if="${flash.error || error}" th:text="${error ? error:$flash.error}">エラーがあります</div>
+	<div class="crudFlash flashSuccess" th:if="${flash.success}" th:text="${flash.success}">Has been saved</div>
+	<div class="crudFlash flashError" th:if="${flash.error || error}" th:text="${error ? error:$flash.error}">Please correct errors</div>
 	<div id="crudContent">
 		<div id="crudList" th:class="${type.name}">
 	    <h2 id="crudListTitle" th:text="#{crud.list.title(${type.name})}">Sites</h2>

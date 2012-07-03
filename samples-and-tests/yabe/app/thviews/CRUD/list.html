@@ -40,28 +40,23 @@
     </ul>
     
 <div id="crud">
-	<div class="crudFlash flashSuccess" th:if="${flash.success}" th:text="${flash.success}">更新しました</div>
-	<div class="crudFlash flashError" th:if="${flash.error || error}" th:text="${error ? error:$flash.error}">エラーがあります</div>
+	<div class="crudFlash flashSuccess" th:if="${flash.success}" th:text="${flash.success}">Has been saved</div>
+	<div class="crudFlash flashError" th:if="${flash.error || error}" th:text="${error ? error:$flash.error}">Please correct errors</div>
 <div id="crudContent">
 <div id="crudList" th:class="${type.name}">
     <h2 id="crudListTitle" th:text="#{crud.list.title(${type.name})}">Sites</h2>
 
-	<span th:remove="all"><!-- 「検索条件のフォーム」：検索条件に使用したいフィールドを設定する場合は、カンマ区切りでdataに渡す（設定しない場合はデフォルト） --></span>
-	<!-- <span th:with="data='name,createdBy'" th:remove="tag"> -->
 	<div id="crudListSearch" th:fragment="crudsearch" >
 		<form action="index.html" th:action="${type.listAction}" method="get">
 		<span th:unless="${#strings.isEmpty(data)}">
 			<input type="hidden" name="searchFields" th:value="${#strings.replace(data,',',' ')}" />
 		</span>
 	    <input type="text" name="search" value="" th:value="${params.search}"/>
-	    <input type="submit" th:value="#{crud.search}" value="検索"/>
+	    <input type="submit" th:value="#{crud.search}" value="Search"/>
 	    (<a href="list.html" th:href="${type.listAction}" th:text="#{crud.list.totalSize(${totalCount})}">0</a>)
 		</form>
     </div>
-    <!-- </span>-->
     
-    <span th:remove="all"><!-- 「検索一覧」：表示したいフィールドを設定する場合は、カンマ区切りでdataに渡す（設定しない場合はデフォルト） --></span>
-    <!-- <span th:with="data='name,createdBy,updatedBy'" > -->
     <div id="crudListTable" th:fragment="crudtable">
 	    <span th:if="${#strings.isEmpty(data)}" th:remove="tag">
 		    <table>
@@ -96,11 +91,9 @@
 		    </table>
 	    </span>
     </div>
-    <!-- </span> -->
     
-    <span th:remove="all"><!-- 「検索一覧のページング」 --></span>
     <div id="crudListPagination" th:fragment="crudpager">
-    	<p class="crudCount" th:text="#{crud.list.size(${count}, ${type.name})}">全1件</p>
+    	<p class="crudCount" th:text="#{crud.list.size(${count}, ${type.name})}">1 total</p>
 	    <p class="crudPages">
 	    <span th:remove="tag" th:with="nbPages=${(count%@play.Play@configuration.getProperty('crud.pageSize', 30) &gt; 0)?(count/@play.Play@configuration.getProperty('crud.pageSize', 30)).intValue()+1:(count/@play.Play@configuration.getProperty('crud.pageSize', 30)).intValue()}">
 	    <span th:remove="tag" th:with="nextPage=${page+1}">
@@ -116,11 +109,11 @@
    		<span th:remove="tag" th:with="end=${end &gt; nbPages ? nbPages : end}">
    		
         <span class="previous" th:if="${page &gt; 1}">
-        	<a href="list.html" th:href="${type.listAction+'?search='+(params.search?params.search:'')+'&amp;order='+order+'&amp;page='+prevPage}" th:text="#{crud.pagination.previous}">前</a>
+        	<a href="list.html" th:href="${type.listAction+'?search='+(params.search?params.search:'')+'&amp;order='+order+'&amp;page='+prevPage}" th:text="#{crud.pagination.previous}">Previous</a>
         </span>
         
         <span class="first" th:if="${start &gt; 1}">
-        	<a href="list.html" th:href="${type.listAction+'?search='+(params.search?params.search:'')+'&amp;order='+order+'&amp;page=1'}" th:text="#{crud.pagination.first}">最初</a>
+        	<a href="list.html" th:href="${type.listAction+'?search='+(params.search?params.search:'')+'&amp;order='+order+'&amp;page=1'}" th:text="#{crud.pagination.first}">First</a>
         </span>
         
         <span class="page" th:each="pg, iterStat : ${#numbers.sequence(start, end)}">
@@ -129,11 +122,11 @@
         </span>
             
         <span class="last" th:if="${end &lt; nbPages}">
-        	<a href="list.html" th:href="${type.listAction+'?search='+(params.search?params.search:'')+'&amp;order='+order+'&amp;page='+nbPages}" th:text="#{crud.pagination.last}">最後</a>
+        	<a href="list.html" th:href="${type.listAction+'?search='+(params.search?params.search:'')+'&amp;order='+order+'&amp;page='+nbPages}" th:text="#{crud.pagination.last}">Last</a>
         </span>
         
         <span class="next" th:if="${page &lt; nbPages}">
-        	<a href="list.html" th:href="${type.listAction+'?search='+(params.search?params.search:'')+'&amp;order='+order+'&amp;page='+nextPage}" th:text="#{crud.pagination.next}">次</a>
+        	<a href="list.html" th:href="${type.listAction+'?search='+(params.search?params.search:'')+'&amp;order='+order+'&amp;page='+nextPage}" th:text="#{crud.pagination.next}">Next</a>
         </span>
    		
    		</span>

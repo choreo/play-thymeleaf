@@ -40,8 +40,8 @@
     </ul>
     
 <div id="crud">
-	<div class="crudFlash flashSuccess" th:if="${flash.success}" th:text="${flash.success}">更新しました</div>
-	<div class="crudFlash flashError" th:if="${flash.error || error}" th:text="${error ? error:flash.error}">エラーがあります</div>
+	<div class="crudFlash flashSuccess" th:if="${flash.success}" th:text="${flash.success}">Has been saved</div>
+	<div class="crudFlash flashError" th:if="${flash.error || error}" th:text="${error ? error:flash.error}">Please correct errors</div>
 <div id="crudContent">
 
 <div id="crudShow" th:class="${type.name}">
@@ -69,8 +69,8 @@
 		</span>	
 		
 	    <p class="crudButtons">
-	        <input type="submit" name="_save" value="保存" th:value="#{crud.save}"/>
-	        <input type="submit" name="_saveAndContinue" value="保存して処理を継続" th:value="#{crud.saveAndContinue}" />
+	        <input type="submit" name="_save" value="Save" th:value="#{crud.save}"/>
+	        <input type="submit" name="_saveAndContinue" value="Save and create another" th:value="#{crud.saveAndContinue}" />
 	    </p>
 		</form>
 	    </div>
@@ -79,7 +79,7 @@
     
 	<form action="list.html" th:action="${type.listAction+'/'+object._key() + '?x-http-method-override=DELETE'}" method="post" th:fragment="cruddelete">
 		<p class="crudDelete">
-	        <input type="submit" value="削除" th:value="#{crud.delete(${type.modelName})}"/>
+	        <input type="submit" value="Delete" th:value="#{crud.delete(${type.modelName})}"/>
 	    </p>
 	</form>
 
