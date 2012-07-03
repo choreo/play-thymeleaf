@@ -102,7 +102,7 @@
     <div id="crudListPagination" th:fragment="crudpager">
     	<p class="crudCount" th:text="#{crud.list.size(${count}, ${type.name})}">全1件</p>
 	    <p class="crudPages">
-	    <span th:remove="tag" th:with="nbPages=${(30 &gt; 0)?(count/@play.Play@configuration.getProperty('crud.pageSize', 30)+1):count/@controllers.TlCrud@getPageSize()}">
+	    <span th:remove="tag" th:with="nbPages=${(count%@play.Play@configuration.getProperty('crud.pageSize', 30) &gt; 0)?(count/@play.Play@configuration.getProperty('crud.pageSize', 30)).intValue()+1:(count/@play.Play@configuration.getProperty('crud.pageSize', 30)).intValue()}">
 	    <span th:remove="tag" th:with="nextPage=${page+1}">
 	    <span th:remove="tag" th:with="prevPage=${page-1}">
 	    <span th:remove="tag" th:with="limit=5">
