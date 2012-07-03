@@ -5,5 +5,5 @@ import play.mvc.*;
 
 @Check("admin")
 @With(Secure.class)
-public class Comments extends TlCrud {    
+public class Comments extends CRUD {    
 }
