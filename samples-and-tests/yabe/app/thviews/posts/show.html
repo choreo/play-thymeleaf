@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<title th:text="${title}">Home</title>
+<title th:text="#{crud.show.title(${type.modelName})}">Home</title>
 <meta charset="utf-8" />
 <link rel="stylesheet" type="text/css" media="screen" href="/public/stylesheets/crud.css" />
 <link rel="stylesheet" type="text/css" media="screen" href="/public/stylesheets/tags.css" />
@@ -51,14 +51,14 @@
 		<div class="objectForm" th:fragment="crudedit">	
 		<form action="list.html" th:action="${type.listAction+'/'+object._key()}" method="post" accept-charset="utf-8" enctype="multipart/form-data">
 		
-		<span th:if="${#strings.isEmpty(data)}">
+		<span th:if="${#strings.isEmpty(data)}" th:remove="tag">
 			<span th:remove="tag" th:each="field, iterStat: ${type.fields}">
 			<div class="crudField crud_text" th:class="${'crudField crud_'+field.type}" th:substituteby="/CRUD/fragment/form.html :: crudeditform">
 			</div>
 			</span>
 		</span>
 		
-		<span th:unless="${#strings.isEmpty(data)}">
+		<span th:unless="${#strings.isEmpty(data)}" th:remove="tag">
 			<span th:remove="tag" th:each="tmp,iterStat: ${#strings.listSplit(data,',')}">
 			<span th:remove="tag" th:with="field=${type.getField(tmp)}">
 			<div class="crudField crud_text" th:class="${'crudField crud_'+field.type}" th:substituteby="/CRUD/fragment/form.html :: crudeditform">
