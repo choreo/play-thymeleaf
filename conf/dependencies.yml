@@ -1,5 +1,5 @@
-self: play -> thymeleaf 1.3
+self: play -> thymeleaf 1.4
 
 require:
     - play
-    - org.thymeleaf -> thymeleaf 2.0.8
+    - org.thymeleaf -> thymeleaf 2.0.11
