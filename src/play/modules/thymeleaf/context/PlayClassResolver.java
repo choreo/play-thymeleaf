@@ -1,19 +1,14 @@
 /*
- * Copyright 2012 Satoshi Takata
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2012 Satoshi Takata Licensed under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with the
+ * License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
-package play.modules.thymeleaf.dialect;
+package play.modules.thymeleaf.context;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,11 +17,19 @@ import ognl.DefaultClassResolver;
 import play.Play;
 
 /**
- * This resolver searches a class from Play's ApplicationClassLoader if DefaultClassResolver fails to load it. 
+ * This resolver searches a class from Play's ApplicationClassLoader if
+ * DefaultClassResolver fails to load it.
  */
 
 public class PlayClassResolver extends DefaultClassResolver {
     private Map classes = new HashMap(101);
+
+    /** singleton instance */
+    public static final PlayClassResolver INSTNACE = new PlayClassResolver();
+
+    private PlayClassResolver() {
+
+    }
 
     @Override
     public Class classForName(String className, Map context) throws ClassNotFoundException {
@@ -51,8 +54,11 @@ public class PlayClassResolver extends DefaultClassResolver {
 
         return result;
     }
-    
-    void clearClassCache() {
+
+    /**
+     * Clears the class cache.
+     */
+    public void clearClassCache() {
         this.classes.clear();
     }
 }

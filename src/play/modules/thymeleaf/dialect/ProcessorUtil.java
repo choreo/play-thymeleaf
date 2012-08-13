@@ -25,9 +25,11 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.thymeleaf.Arguments;
+import org.thymeleaf.standard.expression.OgnlVariableExpressionEvaluator;
 
 import play.Logger;
 import play.exceptions.ActionNotFoundException;
+import play.modules.thymeleaf.context.PlayProcessingContext;
 import play.mvc.ActionInvoker;
 import play.mvc.Router;
 import play.mvc.Http.Request;
@@ -65,8 +67,8 @@ class ProcessorUtil {
             return Router.reverse(attributeValue)
                          .toString();
         }
-        
-        Object obj = PlayOgnlExpressionEvaluator.INSTANCE.evaluate(arguments, exp, arguments.getExpressionEvaluationRoot());
+
+        Object obj = OgnlVariableExpressionEvaluator.INSTANCE.evaluate(arguments.getConfiguration(), new PlayProcessingContext(arguments.getContext()), exp, false);
         if (obj instanceof Map) {
             return Router.reverse(attributeValue, (Map<String, Object>) obj)
                          .toString();

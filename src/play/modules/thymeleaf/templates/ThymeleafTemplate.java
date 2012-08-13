@@ -15,12 +15,14 @@
  */
 package play.modules.thymeleaf.templates;
 
+import java.io.StringWriter;
 import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+import org.thymeleaf.context.ProcessingContext;
 import org.thymeleaf.exceptions.TemplateProcessingException;
 import play.Logger;
 import play.i18n.Lang;
@@ -28,6 +30,7 @@ import play.modules.thymeleaf.ThymeleafPlayException;
 import play.modules.thymeleaf.adapter.FlashAdapter;
 import play.modules.thymeleaf.adapter.ParamsAdapter;
 import play.modules.thymeleaf.adapter.SessionAdapter;
+import play.modules.thymeleaf.context.PlayProcessingContext;
 import play.templates.JavaExtensions;
 import play.templates.Template;
 import play.vfs.VirtualFile;
@@ -81,7 +84,11 @@ public class ThymeleafTemplate extends Template {
         Context context = new PlayContext(locale, args);
         try {
             if (Logger.isTraceEnabled()) Logger.trace("args = %s", args);
-            return templateEngine.process(this.name, context);
+            
+            final StringWriter stringWriter = new StringWriter();
+            templateEngine.process(this.name, new PlayProcessingContext(context), null, stringWriter);
+            return stringWriter.toString();
+            
         } catch (TemplateProcessingException e) {
             throw new ThymeleafPlayException(this, e);
         }
