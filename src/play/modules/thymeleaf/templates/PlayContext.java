@@ -20,6 +20,7 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.thymeleaf.context.Context;
@@ -76,5 +77,11 @@ public class PlayContext extends Context implements IWebContext {
     @Override
     public VariablesMap<String, Object> getApplicationAttributes() {
         return new VariablesMap<String, Object>();
+    }
+
+    @Override
+    public HttpServletResponse getHttpServletResponse() {
+        // No Impl
+        return null;
     }
 }
