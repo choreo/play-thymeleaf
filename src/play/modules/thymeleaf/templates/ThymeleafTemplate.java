@@ -22,7 +22,6 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import org.thymeleaf.context.ProcessingContext;
 import org.thymeleaf.exceptions.TemplateProcessingException;
 import play.Logger;
 import play.i18n.Lang;

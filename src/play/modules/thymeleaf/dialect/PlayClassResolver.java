@@ -22,23 +22,24 @@ import play.Play;
  */
 
 public class PlayClassResolver extends DefaultClassResolver {
-    private Map classes = new HashMap(101);
+    private Map<String, Class<?>> classes = new HashMap<String, Class<?>>(101);
 
     PlayClassResolver() {
 
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public Class classForName(String className, Map context) throws ClassNotFoundException {
         Class result = null;
 
-        if ((result = (Class) classes.get(className)) == null) {
+        if ((result = (Class) this.classes.get(className)) == null) {
             try {
                 result = Class.forName(className);
             } catch (ClassNotFoundException ex) {
                 if (className.indexOf('.') == -1) {
                     result = Class.forName("java.lang." + className);
-                    classes.put("java.lang." + className, result);
+                    this.classes.put("java.lang." + className, result);
                 }
             }
 
@@ -46,7 +47,7 @@ public class PlayClassResolver extends DefaultClassResolver {
                 result = Class.forName(className, true, Play.classloader);
             }
 
-            classes.put(className, result);
+            this.classes.put(className, result);
         }
 
         return result;

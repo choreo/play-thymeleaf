@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.thymeleaf.standard.StandardDialect;
-import org.thymeleaf.standard.expression.OgnlVariableExpressionEvaluator;
 import org.thymeleaf.standard.expression.StandardExpressionExecutor;
 import org.thymeleaf.standard.expression.StandardExpressionParser;
 import org.thymeleaf.standard.expression.StandardExpressionProcessor;

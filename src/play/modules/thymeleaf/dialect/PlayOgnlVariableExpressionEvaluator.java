@@ -51,6 +51,7 @@ public class PlayOgnlVariableExpressionEvaluator
         this.classResolver.clearClassCache();
     }
 
+    @Override
     public final Object evaluate(final Configuration configuration, 
             final IProcessingContext processingContext, final String expression, 
             final boolean useSelectionAsRoot) {

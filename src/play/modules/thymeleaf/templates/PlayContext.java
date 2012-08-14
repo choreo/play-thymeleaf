@@ -50,7 +50,7 @@ public class PlayContext extends Context implements IWebContext {
 
     @Override
     public HttpSession getHttpSession() {
-        return request.getSession();
+        return this.request.getSession();
     }
 
     @Override
