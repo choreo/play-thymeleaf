@@ -27,8 +27,9 @@ import play.Logger;
 import play.Play;
 import play.PlayPlugin;
 import play.classloading.ApplicationClasses.ApplicationClass;
-import play.modules.thymeleaf.context.PlayClassResolver;
+import play.modules.thymeleaf.dialect.FixedStandardDialect;
 import play.modules.thymeleaf.dialect.PlayDialect;
+import play.modules.thymeleaf.dialect.PlayOgnlVariableExpressionEvaluator;
 import play.modules.thymeleaf.templates.PlayTemplateResolver;
 import play.modules.thymeleaf.templates.ThymeleafTemplate;
 import play.templates.Template;
@@ -68,7 +69,7 @@ public class ThymeleafPlugin extends PlayPlugin {
 
     @Override
     public List<ApplicationClass> onClassesChange(List<ApplicationClass> modified) {
-        PlayClassResolver.INSTNACE.clearClassCache();
+        PlayOgnlVariableExpressionEvaluator.INSTANCE.clearClassCache();
         return super.onClassesChange(modified);
     }
     
@@ -112,6 +113,7 @@ public class ThymeleafPlugin extends PlayPlugin {
         
         templateEngine = new TemplateEngine();
         templateEngine.addTemplateResolver(playResolver);
+        templateEngine.setDialect(new FixedStandardDialect());
         templateEngine.addDialect(new PlayDialect());
     }
 

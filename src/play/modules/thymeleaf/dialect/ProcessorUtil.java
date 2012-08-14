@@ -29,7 +29,6 @@ import org.thymeleaf.standard.expression.OgnlVariableExpressionEvaluator;
 
 import play.Logger;
 import play.exceptions.ActionNotFoundException;
-import play.modules.thymeleaf.context.PlayProcessingContext;
 import play.mvc.ActionInvoker;
 import play.mvc.Router;
 import play.mvc.Http.Request;
@@ -68,7 +67,7 @@ class ProcessorUtil {
                          .toString();
         }
 
-        Object obj = OgnlVariableExpressionEvaluator.INSTANCE.evaluate(arguments.getConfiguration(), new PlayProcessingContext(arguments.getContext()), exp, false);
+        Object obj = OgnlVariableExpressionEvaluator.INSTANCE.evaluate(arguments.getConfiguration(), arguments, exp, false);
         if (obj instanceof Map) {
             return Router.reverse(attributeValue, (Map<String, Object>) obj)
                          .toString();

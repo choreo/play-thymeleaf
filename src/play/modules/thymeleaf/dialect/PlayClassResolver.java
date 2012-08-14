@@ -8,7 +8,7 @@
  * KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package play.modules.thymeleaf.context;
+package play.modules.thymeleaf.dialect;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,10 +24,7 @@ import play.Play;
 public class PlayClassResolver extends DefaultClassResolver {
     private Map classes = new HashMap(101);
 
-    /** singleton instance */
-    public static final PlayClassResolver INSTNACE = new PlayClassResolver();
-
-    private PlayClassResolver() {
+    PlayClassResolver() {
 
     }
 

@@ -30,7 +30,6 @@ import play.modules.thymeleaf.ThymeleafPlayException;
 import play.modules.thymeleaf.adapter.FlashAdapter;
 import play.modules.thymeleaf.adapter.ParamsAdapter;
 import play.modules.thymeleaf.adapter.SessionAdapter;
-import play.modules.thymeleaf.context.PlayProcessingContext;
 import play.templates.JavaExtensions;
 import play.templates.Template;
 import play.vfs.VirtualFile;
@@ -86,7 +85,7 @@ public class ThymeleafTemplate extends Template {
             if (Logger.isTraceEnabled()) Logger.trace("args = %s", args);
             
             final StringWriter stringWriter = new StringWriter();
-            templateEngine.process(this.name, new PlayProcessingContext(context), null, stringWriter);
+            templateEngine.process(this.name, context, null, stringWriter);
             return stringWriter.toString();
             
         } catch (TemplateProcessingException e) {
