@@ -6,9 +6,10 @@ p. A Play framework module to use "Thymeleaf 2.0":http://www.thymeleaf.org/ as a
 
 h2. Version History:
 
-h3. 2012/08/13 v1.4:
+h3. 2012/08/14 v1.4:
 
 # Updated to thymeleaf v2.0.11
+# Refactored internal ExpressionEvaluator due to thymeleaf API update 
 
 h3. 2012/06/24 v1.3:
 
