@@ -2,7 +2,7 @@ h1. Thymeleaf module
 
 h2. Description
 
-p. A Play framework module to use "Thymeleaf 2.0":http://www.thymeleaf.org/ as a template engine.
+p. A Play framework **1.x** module to use "Thymeleaf 2.0":http://www.thymeleaf.org/ as a template engine.
 
 h2. Version History:
 
