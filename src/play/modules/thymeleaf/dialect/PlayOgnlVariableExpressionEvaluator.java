@@ -1,6 +1,7 @@
 package play.modules.thymeleaf.dialect;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import javassist.ClassPool;
@@ -20,8 +21,11 @@ import org.thymeleaf.cache.ICacheManager;
 import org.thymeleaf.context.IProcessingContext;
 import org.thymeleaf.exceptions.TemplateProcessingException;
 import org.thymeleaf.standard.expression.IStandardVariableExpressionEvaluator;
+import org.thymeleaf.standard.expression.OgnlVariableExpressionEvaluator;
 import org.thymeleaf.util.ClassLoaderUtils;
 import org.thymeleaf.util.ObjectUtils;
+
+import play.Play;
 
 /**
  * the evaluator which offers the same function as OgnlVariableExpressionEvaluator except the OgnlContext uses PlayClassResolver.
@@ -37,12 +41,14 @@ public class PlayOgnlVariableExpressionEvaluator
 
     /** instance */
     public static final PlayOgnlVariableExpressionEvaluator INSTANCE = new PlayOgnlVariableExpressionEvaluator();
+
     private static final String OGNL_CACHE_PREFIX = "{ognl}";
 
 
     private static boolean booleanFixApplied = false;
     
     private PlayClassResolver classResolver = new PlayClassResolver();
+
     
     /**
      * clears the Class cache
@@ -51,7 +57,7 @@ public class PlayOgnlVariableExpressionEvaluator
         this.classResolver.clearClassCache();
     }
 
-    @Override
+    
     public final Object evaluate(final Configuration configuration, 
             final IProcessingContext processingContext, final String expression, 
             final boolean useSelectionAsRoot) {
@@ -82,9 +88,14 @@ public class PlayOgnlVariableExpressionEvaluator
                     cache.put(OGNL_CACHE_PREFIX + expression, expressionTree);
                 }
             }
+
             
+            final Map<String,Object> contextVariables = new HashMap<String, Object>();
             
-            final Map<String,Object> contextVariables = processingContext.getBaseContextVariables();
+            final Map<String,Object> expressionObjects = processingContext.getExpressionObjects();
+            if (expressionObjects != null) {
+                contextVariables.putAll(expressionObjects);
+            }
             
             final Map<String,Object> additionalContextVariables = computeAdditionalContextVariables(processingContext);
             if (additionalContextVariables != null && !additionalContextVariables.isEmpty()) {
@@ -101,6 +112,7 @@ public class PlayOgnlVariableExpressionEvaluator
             context.setClassResolver(this.classResolver);
             
             return Ognl.getValue(expressionTree, context, evaluationRoot);
+            //return Ognl.getValue(expressionTree, contextVariables, evaluationRoot);
             
         } catch (final OgnlException e) {
             throw new TemplateProcessingException(
@@ -168,8 +180,8 @@ public class PlayOgnlVariableExpressionEvaluator
         
         try {
             
-            final ClassLoader classLoader = 
-                    ClassLoaderUtils.getClassLoader(PlayOgnlVariableExpressionEvaluator.class);
+            final ClassLoader classLoader = Play.classloader; 
+                    //ClassLoaderUtils.getClassLoader(OgnlVariableExpressionEvaluator.class);
             
             final ClassPool pool = new ClassPool(true);
             pool.insertClassPath(new LoaderClassPath(classLoader));
