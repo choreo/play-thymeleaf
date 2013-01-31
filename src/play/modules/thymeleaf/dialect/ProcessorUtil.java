@@ -67,7 +67,7 @@ class ProcessorUtil {
                          .toString();
         }
 
-        Object obj = OgnlVariableExpressionEvaluator.INSTANCE.evaluate(arguments.getConfiguration(), arguments, exp, false);
+        Object obj = PlayOgnlVariableExpressionEvaluator.INSTANCE.evaluate(arguments.getConfiguration(), arguments, exp, false);
         if (obj instanceof Map) {
             return Router.reverse(attributeValue, (Map<String, Object>) obj)
                          .toString();
