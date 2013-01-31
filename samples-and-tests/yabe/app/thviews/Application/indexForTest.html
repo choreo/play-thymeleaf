@@ -24,6 +24,7 @@
 
 	<div id="main">
 		<div th:text="${@controllers.Application@TEST_STATIC_VALUE}">Test value comes here.</div>
+		<div th:text="${@enums.EnumTest@TEST2}">Enum test value</div>
 
         <div th:if="${frontPost}" th:remove="tag">
 
