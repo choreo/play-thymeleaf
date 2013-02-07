@@ -1,10 +1,8 @@
-import org.junit.*;
+import org.junit.Test;
 
+import play.mvc.Http.Response;
+import play.test.FunctionalTest;
 import enums.EnumTest;
-import play.test.*;
-import play.mvc.*;
-import play.mvc.Http.*;
-import models.*;
 
 public class PluginTest extends FunctionalTest {
 
@@ -14,8 +12,18 @@ public class PluginTest extends FunctionalTest {
         assertIsOk(response);
         assertContentType("text/html", response);
         assertCharset(play.Play.defaultWebEncoding, response);
-        
+
         assertContentMatch("refer this value from thymeleaf template", response);
         assertContentMatch(EnumTest.TEST2.toString(), response);
+    }
+
+    @Test
+    public void testThatModuleTemplateCanBeLoaded() {
+        Response response = GET("/testmodule");
+        assertIsOk(response);
+        assertContentType("text/html", response);
+        assertCharset(play.Play.defaultWebEncoding, response);
+
+        assertContentMatch("test module file.", response);
     }
 }

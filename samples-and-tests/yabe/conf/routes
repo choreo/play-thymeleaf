@@ -17,6 +17,9 @@ GET     /admin/new                              Admin.form
 POST    /admin/new                              Admin.save
 *       /admin                                  module:crud
 
+# Test module
+*       /testmodule                             module:testmodule
+
 # Import Secure routes
 *       /                                       module:secure
 

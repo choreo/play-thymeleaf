@@ -3,3 +3,11 @@
 require:
     - play
     - play -> thymeleaf [1.0,)
+    - yabe -> testmodule 0.1
+repositories:
+    - My modules:
+        type:       local
+        artifact:   ${application.path}/../[module]
+        contains:
+            - yabe -> *
+    
