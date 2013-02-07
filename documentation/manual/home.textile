@@ -47,6 +47,11 @@ h3. thymeleaf.enhancer.enabled=true
 
 whether to enhance the application classes in order to remove "synthetic" flags for OGNL
 
+h3. thymeleaf.modules=
+
+Comma separated module names that you want thymeleaf to load templates from, aside from the files within the main project. 
+The template search path is module-A/app/thviews, suppose the prefix is by default "app/thviews".
+
 h2. Usage
 
 Put thymeleaf well-formed template files like below in "app/thviews" (by default). 

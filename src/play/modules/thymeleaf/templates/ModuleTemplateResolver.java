@@ -25,12 +25,6 @@ import play.vfs.VirtualFile;
 
 /**
  * Optional template resolver class that loads template files from module.
- * You can add this resolver within the 'OnApplicationStart' job.
- * <pre>
- *       TemplateEngine engine = Play.plugin(ThymeleafPlugin.class)
- *                                   .getTemplateEngine();
- *       engine.addTemplateResolver(new ModuleTemplateResolver("modulename"));
- * </pre>
  */
 
 public class ModuleTemplateResolver extends TemplateResolver {

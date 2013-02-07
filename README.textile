@@ -6,6 +6,12 @@ p. A Play framework **1.x** module to use "Thymeleaf 2.0":http://www.thymeleaf.o
 
 h2. Version History:
 
+h3. 2013/02/07 v1.5:
+
+# Updated to thymeleaf v2.0.15
+# Fixed the bug that enum classes were not loaded and could not be accessed from OGNL
+# ModuleTemplateResolver can be configured with key "thymeleaf.modules"
+
 h3. 2012/08/14 v1.4:
 
 # Updated to thymeleaf v2.0.11
