@@ -1,6 +1,6 @@
 h1. Thymeleaf module
 
-This is a Play framework module to use "Thymeleaf 2.0":http://www.thymeleaf.org/ as a template engine.
+This is a Play framework 1.2 module to use "Thymeleaf 2.0":http://www.thymeleaf.org/ as a template engine.
 
 Thymeleaf mainly uses the xml attributes, keeping the XML/XHTML/HTML5 templates well-formed.  As the "official site":http://www.thymeleaf.org/ says, those can be correctly displayed by browsers and therefore work also as static prototypes.
 
@@ -18,7 +18,7 @@ Add the following line to your dependencies.yml:
 <pre>
 require:
     - play
-    - play -> thymeleaf 0.0.1
+    - play -> thymeleaf 1.5
 </pre>
 
 and call "play deps".  Remove 404.html and 500.html in "app/views". (the html errors are routed to thymeleaf template)
