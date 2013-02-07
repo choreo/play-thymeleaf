@@ -15,6 +15,7 @@
  */
 package play.modules.thymeleaf;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.BooleanUtils;
@@ -22,6 +23,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.templatemode.StandardTemplateModeHandlers;
+import org.thymeleaf.templateresolver.TemplateResolver;
 
 import play.Logger;
 import play.Play;
@@ -30,6 +32,7 @@ import play.classloading.ApplicationClasses.ApplicationClass;
 import play.modules.thymeleaf.dialect.FixedStandardDialect;
 import play.modules.thymeleaf.dialect.PlayDialect;
 import play.modules.thymeleaf.dialect.PlayOgnlVariableExpressionEvaluator;
+import play.modules.thymeleaf.templates.ModuleTemplateResolver;
 import play.modules.thymeleaf.templates.PlayTemplateResolver;
 import play.modules.thymeleaf.templates.ThymeleafTemplate;
 import play.templates.Template;
@@ -60,6 +63,8 @@ public class ThymeleafPlugin extends PlayPlugin {
     private String mode;
     
     private String ttlString;
+    
+    private List<String> thymeleafModules = new ArrayList<String>(1);
 
     @Override
     public void onLoad() {
@@ -77,28 +82,65 @@ public class ThymeleafPlugin extends PlayPlugin {
     public void onConfigurationRead() {
         this.prefix = Play.configuration.getProperty("thymeleaf.prefix", "/app/thviews");
         this.suffix = Play.configuration.getProperty("thymeleaf.suffix");
-        this.mode = Play.configuration.getProperty("thymeleaf.templatemode",  StandardTemplateModeHandlers.XHTML.getTemplateModeName());
+        this.mode = Play.configuration.getProperty("thymeleaf.templatemode", StandardTemplateModeHandlers.XHTML.getTemplateModeName());
         this.ttlString = Play.configuration.getProperty("thymeleaf.cache.ttl");
+        String[] modules = Play.configuration.getProperty("thymeleaf.modules", "")
+                                             .trim()
+                                             .split(",");
+        for (String moduleName : modules) {
+            if (!moduleName.isEmpty()) {
+                this.thymeleafModules.add(moduleName.trim());
+            }
+        }
     }
     
     @Override
     public void onApplicationStart() {
         
         PlayTemplateResolver playResolver = new PlayTemplateResolver();
-        VirtualFile throot = VirtualFile.open(Play.applicationPath).child(this.prefix);
-        playResolver.setPrefix(this.prefix);
+        this.prepareResolver(playResolver, VirtualFile.open(Play.applicationPath));
+        
+        List<ModuleTemplateResolver> moduleResolvers = new ArrayList<ModuleTemplateResolver>(this.thymeleafModules.size());
+        for (String moduleName : this.thymeleafModules) {
+            VirtualFile moduleRoot = Play.modules.get(moduleName);
+            if (moduleRoot == null || !moduleRoot.exists()) {
+                Logger.warn("module %s not found. Check the configuration value : %s", moduleName,
+                                Play.configuration.getProperty("thymeleaf.modules"));
+                continue;
+            }
+            
+            ModuleTemplateResolver resolver = new ModuleTemplateResolver(moduleName);
+            this.prepareResolver(resolver, moduleRoot);
+            moduleResolvers.add(resolver);
+            Logger.info("module %s registered for thymeleaf template search path", moduleName);
+        }
+        
+        templateEngine = new TemplateEngine();
+        templateEngine.addTemplateResolver(playResolver);
+        
+        for (ModuleTemplateResolver moduleTemplateResolver : moduleResolvers) {
+            templateEngine.addTemplateResolver(moduleTemplateResolver);
+        }
+        
+        templateEngine.setDialect(new FixedStandardDialect());
+        templateEngine.addDialect(new PlayDialect());
+    }
+    
+    private void prepareResolver(TemplateResolver templateResolver, VirtualFile rootDir) {
+        VirtualFile throot = rootDir.child(this.prefix);
+        templateResolver.setPrefix(this.prefix);
         // add this path on top in order to search plugin template first
         Play.templatesPath.add(0, throot);
 
         if (this.suffix != null) {
-            playResolver.setSuffix(this.suffix);
+            templateResolver.setSuffix(this.suffix);
         }
 
-        playResolver.setTemplateMode(this.mode);
+        templateResolver.setTemplateMode(this.mode);
 
         switch (Play.mode) {
         case DEV:
-            playResolver.setCacheable(false);
+            templateResolver.setCacheable(false);
             break;
         default:
             if (ttlString != null) {
@@ -106,15 +148,11 @@ public class ThymeleafPlugin extends PlayPlugin {
                     Logger.warn("Configuration 'thymeleaf.cache.ttl' value %s must be number(in millisecond).", ttlString);
                     ttlString = "0";
                 }
-                playResolver.setCacheTTLMs(Long.valueOf(ttlString));
+                templateResolver.setCacheTTLMs(Long.valueOf(ttlString));
             }
             break;
         }
-        
-        templateEngine = new TemplateEngine();
-        templateEngine.addTemplateResolver(playResolver);
-        templateEngine.setDialect(new FixedStandardDialect());
-        templateEngine.addDialect(new PlayDialect());
+
     }
 
     @Override
@@ -134,10 +172,26 @@ public class ThymeleafPlugin extends PlayPlugin {
      */
     @Override
     public Template loadTemplate(VirtualFile file) {
+
         String relativePath = file.relativePath();
-        String templatePath = StringUtils.removeStart(relativePath, this.prefix);
-        if(relativePath.length() == templatePath.length()) {
-            if(Logger.isDebugEnabled()) Logger.debug("%s is not in thymeleaf path", templatePath);
+        if (Logger.isDebugEnabled()) Logger.debug("relative path = %s", relativePath);
+        String templatePath = null;
+
+        if (StringUtils.startsWith(relativePath, this.prefix)) {
+
+            templatePath = StringUtils.removeStart(relativePath, this.prefix);
+
+        } else if (!this.thymeleafModules.isEmpty() && relativePath.startsWith("{module:")) {
+            String moduleName = StringUtils.substringBetween(relativePath, "{module:", "}" + this.prefix);
+            
+            if (this.thymeleafModules.contains(moduleName)) {
+                if (Logger.isDebugEnabled()) Logger.debug("module %s is thymeleaf enabled.", moduleName);
+                templatePath = StringUtils.substringAfter(relativePath, "}" + this.prefix);
+            }
+        }
+
+        if(templatePath == null) {
+            if(Logger.isDebugEnabled()) Logger.debug("%s is not in thymeleaf path", relativePath);
             return null;
         }
         
