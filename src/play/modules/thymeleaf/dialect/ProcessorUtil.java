@@ -25,8 +25,6 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.thymeleaf.Arguments;
-import org.thymeleaf.standard.expression.OgnlVariableExpressionEvaluator;
-
 import play.Logger;
 import play.exceptions.ActionNotFoundException;
 import play.mvc.ActionInvoker;

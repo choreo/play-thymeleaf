@@ -4,10 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtMethod;
-import javassist.LoaderClassPath;
+import javassist.*;
 import ognl.Ognl;
 import ognl.OgnlContext;
 import ognl.OgnlException;
@@ -21,8 +18,6 @@ import org.thymeleaf.cache.ICacheManager;
 import org.thymeleaf.context.IProcessingContext;
 import org.thymeleaf.exceptions.TemplateProcessingException;
 import org.thymeleaf.standard.expression.IStandardVariableExpressionEvaluator;
-import org.thymeleaf.standard.expression.OgnlVariableExpressionEvaluator;
-import org.thymeleaf.util.ClassLoaderUtils;
 import org.thymeleaf.util.ObjectUtils;
 
 import play.Play;
@@ -58,6 +53,7 @@ public class PlayOgnlVariableExpressionEvaluator
     }
 
     
+    @Override
     public final Object evaluate(final Configuration configuration, 
             final IProcessingContext processingContext, final String expression, 
             final boolean useSelectionAsRoot) {
