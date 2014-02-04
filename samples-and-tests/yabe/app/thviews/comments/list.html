@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<title th:text="#{crud.list.title(${type.modelName})}">Home</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" media="screen" href="/public/stylesheets/crud.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="/public/stylesheets/tags.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="/public/stylesheets/main.css" />
+</head>
+
+<body id="admin">
+<div id="header">
+            <div id="logo">
+                yabe. <span>administration</span>
+            </div>
+            <ul id="tools">
+                <li>
+                    <a pl:href="Secure.logout">Log out</a>
+                </li>
+            </ul>
+        </div>
+        
+<div id="main">
+	<ul id="adminMenu" th:substituteby="/CRUD/list.html :: crudnavigator">
+        <li th:class="${request.controller == 'Admin' ? 'selected' : ''}">
+            <a pl:href="Admin.index">My posts</a>
+        </li>
+    </ul>
+    
+<div id="crud">
+	<div class="crudFlash flashSuccess" th:if="${flash.success}" th:text="${flash.success}">Has been saved</div>
+	<div class="crudFlash flashError" th:if="${flash.error || error}" th:text="${error ? error:$flash.error}">Please correct errors</div>
+	<div id="crudContent">
+		<div id="crudList" th:class="${type.name}">
+	    <h2 id="crudListTitle" th:text="#{crud.list.title(${type.name})}">Sites</h2>
+	
+		<div id="crudListSearch" th:substituteby="/CRUD/list.html :: crudsearch"></div>
+	 
+	    <span th:with="data='content,post,author'" th:remove="tag">
+	    <div id="crudListTable" th:substituteby="/CRUD/list.html :: crudtable"/>
+	    </span>
+	    
+	    <div id="crudListPagination" th:substituteby="/CRUD/list.html :: crudpager"/>
+	    
+		<p id="crudListAdd" th:substituteby="/CRUD/list.html :: crudblank"/>
+		
+	</div>
+</div>
+
+</div>
+</div>
+<p id="footer">
+            Yabe is a (not so) powerful blog engine built with the 
+            <a href="http://www.playframework.org">play framework</a>
+            as a tutorial application.
+        </p>
+   
+</body>
+</html>

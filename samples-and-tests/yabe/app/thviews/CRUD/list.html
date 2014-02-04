@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<title th:text="#{crud.list.title(${type.modelName})}">Home</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" media="screen" href="/public/stylesheets/crud.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="/public/stylesheets/tags.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="/public/stylesheets/main.css" />
+</head>
+
+<body id="admin">
+<div id="header">
+            <div id="logo">
+                yabe. <span>administration</span>
+            </div>
+            <ul id="tools">
+                <li>
+                    <a pl:href="Secure.logout">Log out</a>
+                </li>
+            </ul>
+        </div>
+        
+<div id="main">
+	<ul id="adminMenu" th:fragment="crudnavigator">
+        <li th:class="${request.controller == 'Admin' ? 'selected' : ''}">
+            <a pl:href="Admin.index">My posts</a>
+        </li>
+            <li th:class="${request.controller == 'Posts' ? 'selected' : ''}">
+                <a th:href="@{posts}">Posts</a>
+            </li>
+            <li th:class="${request.controller == 'Tags' ? 'selected' : ''}">
+                <a th:href="@{tags}">Tags</a>
+            </li>
+            <li th:class="${request.controller == 'Comments' ? 'selected' : ''}">
+                <a th:href="@{comments}">Comments</a>
+            </li>
+            <li th:class="${request.controller == 'Users' ? 'selected' : ''}">
+                <a th:href="@{users}">Users</a>
+            </li>
+    </ul>
+    
+<div id="crud">
+	<div class="crudFlash flashSuccess" th:if="${flash.success}" th:text="${flash.success}">Has been saved</div>
+	<div class="crudFlash flashError" th:if="${flash.error || error}" th:text="${error ? error:$flash.error}">Please correct errors</div>
+<div id="crudContent">
+<div id="crudList" th:class="${type.name}">
+    <h2 id="crudListTitle" th:text="#{crud.list.title(${type.name})}">Sites</h2>
+
+	<div id="crudListSearch" th:fragment="crudsearch" >
+		<form action="index.html" th:action="${type.listAction}" method="get">
+		<span th:unless="${#strings.isEmpty(data)}">
+			<input type="hidden" name="searchFields" th:value="${#strings.replace(data,',',' ')}" />
+		</span>
+	    <input type="text" name="search" value="" th:value="${params.search}"/>
+	    <input type="submit" th:value="#{crud.search}" value="Search"/>
+	    (<a href="list.html" th:href="${type.listAction}" th:text="#{crud.list.totalSize(${totalCount})}">0</a>)
+		</form>
+    </div>
+    
+    <div id="crudListTable" th:fragment="crudtable">
+	    <span th:if="${#strings.isEmpty(data)}" th:remove="tag">
+		    <table>
+		    <thead>
+		    <tr>
+		    <th>
+		        <a href="list.html" th:href="${type.listAction+'?search='+(params.search?params.search:'')+'&amp;order='+(order=='DESC'?'ASC':'DESC')}" th:text="${type.name}" class="crudSortedDesc" th:class="${order=='DESC'?'crudSortedDesc':'crudSortedAsc'}">sites</a>
+		    </th>
+		    </tr>
+		    </thead>
+		    <tr class="even" th:each="tmp,iterStat : ${objects}" th:class="${iterStat.odd}? 'odd' : 'even'">
+		    	<td>
+		    		<a href="show.html" th:text="${tmp}" th:href="${type.listAction+'/'+tmp._key()}">sites</a>
+		    	</td>
+		    </tr>
+		    </table>
+	    </span>
+	    <span th:unless="${#strings.isEmpty(data)}" th:remove="tag">
+		    <table>
+		    <thead>
+		    <tr>
+			    <th th:each="tmp,iterStat: ${#strings.listSplit(data,',')}">
+			        <a href="list.html" th:href="${type.listAction+'?search='+(params.search?params.search:'')+'&amp;order='+(order=='DESC'?'ASC':'DESC')+'&amp;orderBy='+tmp}" th:text="#{${type.getField(tmp).name}}" class="crudSortedDesc" th:class="${(orderBy==tmp) ? (order=='DESC'?'crudSortedDesc':'crudSortedAsc') : ''}">sites</a>
+			    </th>
+		    </tr>
+		    </thead>
+		    <tr class="even" th:each="tmp,iterStat : ${objects}" th:class="${iterStat.odd}? 'odd' : 'even'">
+		    	<td th:each="tmp2,iterStat: ${#strings.listSplit(data,',')}">
+		    		<a href="show.html" th:text="${tmp[tmp2]}" th:href="${type.listAction+'/'+tmp._key()}">sites</a>
+		    	</td>
+		    </tr>
+		    </table>
+	    </span>
+    </div>
+    
+    <div id="crudListPagination" th:fragment="crudpager">
+    	<p class="crudCount" th:text="#{crud.list.size(${count}, ${type.name})}">1 total</p>
+	    <p class="crudPages">
+	    <span th:remove="tag" th:with="nbPages=${(count%@play.Play@configuration.getProperty('crud.pageSize', 30) &gt; 0)?(count/@play.Play@configuration.getProperty('crud.pageSize', 30)).intValue()+1:(count/@play.Play@configuration.getProperty('crud.pageSize', 30)).intValue()}">
+	    <span th:remove="tag" th:with="nextPage=${page+1}">
+	    <span th:remove="tag" th:with="prevPage=${page-1}">
+	    <span th:remove="tag" th:with="limit=5">
+	    <span th:remove="tag" th:with="start=${page-(limit/2) + ((limit%2 &gt; 0)?0:1)}">
+	    <span th:remove="tag" th:with="end=${page+(limit/2)}">
+	    
+    	<span th:remove="tag" th:with="end=${(start &lt; 1?(end+(1-start) &lt; nbPages?end+(1-start):nbPages):end)}">
+    	<span th:remove="tag" th:with="start=${start &lt; 1?1:start}">
+    	
+    	<span th:remove="tag" th:with="start=${(end &gt; nbPages ? (start-(end-nbPages) &gt; 1 ? start-(end-nbPages):1):start)}">
+   		<span th:remove="tag" th:with="end=${end &gt; nbPages ? nbPages : end}">
+   		
+        <span class="previous" th:if="${page &gt; 1}">
+        	<a href="list.html" th:href="${type.listAction+'?search='+(params.search?params.search:'')+'&amp;order='+order+'&amp;page='+prevPage}" th:text="#{crud.pagination.previous}">Previous</a>
+        </span>
+        
+        <span class="first" th:if="${start &gt; 1}">
+        	<a href="list.html" th:href="${type.listAction+'?search='+(params.search?params.search:'')+'&amp;order='+order+'&amp;page=1'}" th:text="#{crud.pagination.first}">First</a>
+        </span>
+        
+        <span class="page" th:each="pg, iterStat : ${#numbers.sequence(start, end)}">
+        	<strong th:text="${pg}" th:if="${pg==page}">1</strong>
+			<a href="list.html" th:if="${pg!=page}" th:href="${type.listAction+'?search='+(params.search?params.search:'')+'&amp;order='+order+'&amp;page='+pg}" th:text="${pg}">1</a>
+        </span>
+            
+        <span class="last" th:if="${end &lt; nbPages}">
+        	<a href="list.html" th:href="${type.listAction+'?search='+(params.search?params.search:'')+'&amp;order='+order+'&amp;page='+nbPages}" th:text="#{crud.pagination.last}">Last</a>
+        </span>
+        
+        <span class="next" th:if="${page &lt; nbPages}">
+        	<a href="list.html" th:href="${type.listAction+'?search='+(params.search?params.search:'')+'&amp;order='+order+'&amp;page='+nextPage}" th:text="#{crud.pagination.next}">Next</a>
+        </span>
+   		
+   		</span>
+   		</span>
+    	</span>
+    	</span>
+	    </span>
+   		</span>
+   		</span>
+    	</span>
+    	</span>	    	
+	    </span>
+	    </p>
+    </div>
+    
+	<p id="crudListAdd" th:fragment="crudblank">
+        <a href="blank.html" th:href="${type.blankAction}" th:text="#{crud.add(${type.modelName})}">Add Site</a>
+    </p>
+</div>
+</div>
+
+</div>
+</div>
+<p id="footer">
+            Yabe is a (not so) powerful blog engine built with the 
+            <a href="http://www.playframework.org">play framework</a>
+            as a tutorial application.
+        </p>
+   
+</body>
+</html>
